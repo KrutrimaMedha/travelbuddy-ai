@@ -1,0 +1,25 @@
+# TravelBuddy AI - Root Project Configuration
+# 
+# This is a container project for the travel_planner package.
+# For development and usage, work directly with the travel_planner package:
+#
+#   cd travel_planner
+#   uv venv && source .venv/bin/activate
+#   uv pip install -e .
+#
+# See travel_planner/README.md for complete setup instructions.
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "travelbuddy-ai"
+version = "1.0.0"
+description = "AI-powered travel planning assistant - Container for travel_planner package"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+# The actual package is in ./travel_planner/
+# This root project serves as documentation and container only.
