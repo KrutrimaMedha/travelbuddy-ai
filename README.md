@@ -4,7 +4,7 @@ An AI-powered travel planning assistant that helps users create personalized tra
 
 ## 🎯 Main Package
 
-This repository contains the **travel_planner** package - a complete, self-contained AI travel planning system.
+This repository contains the **travel_planner** package - a complete, self-contained AI travel planning system, and a **weather_tool** MCP server for weather data.
 
 ```
 travelbuddy-ai/
@@ -13,6 +13,10 @@ travelbuddy-ai/
 │   ├── tests/               # Test suite  
 │   ├── examples/            # Example scripts
 │   ├── README.md           # Complete documentation & setup guide
+│   └── pyproject.toml      # Package configuration
+├── weather_tool/            # 🌤️ Weather MCP Tool (Open‑Meteo)
+│   ├── src/                 # Source code
+│   ├── README.md           # Usage and server details
 │   └── pyproject.toml      # Package configuration
 ├── .env.example            # Environment template
 ├── LICENSE                 # MIT License
@@ -43,6 +47,8 @@ The travel_planner package contains:
 - 🔧 Development workflow
 - 🔑 API keys setup
 - 🚀 Quick start guide
+
+For the Weather MCP tool, see [weather_tool/README.md](weather_tool/README.md).
 
 ## ✨ Key Features
 
