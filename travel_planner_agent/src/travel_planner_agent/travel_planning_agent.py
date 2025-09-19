@@ -50,7 +50,7 @@ class PersonalizedTripPlanner:
 
     def __init__(self, api_key: Optional[str] = None):
         """Initialize the Personalized Trip Planner"""
-        self.api_key = api_key or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+        self.api_key = 'AIzaSyDmd6RTgWWBFebqL1wjX-_hx6J0zziSESc' or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
         if not self.api_key:
             raise ValueError("GEMINI_API_KEY or GOOGLE_API_KEY must be provided")
