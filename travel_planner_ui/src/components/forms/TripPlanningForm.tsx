@@ -80,7 +80,8 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
   } = useForm<TripPlanningFormData>({
     resolver: zodResolver(tripPlanningSchema),
     defaultValues: {
-      travelers_count: 2
+      travelers_count: 2,
+      duration: '3-4 days'
     },
     mode: 'onChange'
   })
@@ -498,7 +499,7 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
                   }`}>
                     {/* Show clear sufficient/insufficient status */}
                     <div className="font-medium mb-1">
-                      {(budgetValidation.valid === true || (budgetValidation as any).budget_sufficient === true) ? (
+                      {(budgetValidation.valid === true || (budgetValidation as any).budget_sufficient === true || (budgetValidation as any).status === 'sufficient') ? (
                         <span className="text-green-700">✅ Budget Sufficient</span>
                       ) : (
                         <span className="text-red-700">❌ Budget Insufficient</span>
@@ -506,7 +507,7 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
                     </div>
 
                     {/* Show minimum required if budget is insufficient */}
-                    {(budgetValidation.valid !== true && (budgetValidation as any).budget_sufficient !== true) && (
+                    {(budgetValidation.valid !== true && (budgetValidation as any).budget_sufficient !== true && (budgetValidation as any).status !== 'sufficient') && (
                       <>
                         {(budgetValidation.minimum_required || (budgetValidation as any).minimum_required) && (
                           <p className="text-red-600 font-medium">

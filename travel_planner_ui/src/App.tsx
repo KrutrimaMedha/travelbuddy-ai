@@ -41,7 +41,6 @@ function App() {
   const navigation = [
     { name: 'Home', href: '#' },
     { name: 'Plan Trip', href: '#trip-planner' },
-    { name: 'AI Search Demo', href: '#search-demo' },
     { name: 'Features', href: '#features' },
     { name: 'About', href: '#about' }
   ]
@@ -201,14 +200,14 @@ function App() {
         {/* Footer */}
         <footer className="border-t border-border bg-secondary/30">
           <div className="container mx-auto px-4 py-12">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="flex justify-center">
               {/* Brand */}
-              <div className="col-span-1 md:col-span-2">
+              <div className="flex flex-col items-center text-center">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary/80 rounded-lg flex items-center justify-center">
                     <Plane className="h-4 w-4 text-white" />
                   </div>
-                  <span className="text-lg font-bold">TravelBuddy AI</span>
+                  <span className="text-lg font-bold">TravelBuddy</span>
                 </div>
                 <p className="text-sm text-muted-foreground mb-4 max-w-md">
                   AI-powered travel planning that creates personalized itineraries, validates budgets,
@@ -222,7 +221,7 @@ function App() {
               </div>
 
               {/* Quick Links */}
-              <div>
+              {/* <div>
                 <h3 className="font-semibold mb-4">Quick Links</h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li><a href="#" className="hover:text-foreground transition-colors">How it Works</a></li>
@@ -230,10 +229,10 @@ function App() {
                   <li><a href="#" className="hover:text-foreground transition-colors">Pricing</a></li>
                   <li><a href="#" className="hover:text-foreground transition-colors">Support</a></li>
                 </ul>
-              </div>
+              </div> */}
 
               {/* Travel Themes */}
-              <div>
+              {/* <div>
                 <h3 className="font-semibold mb-4">Travel Themes</h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li><a href="#" className="hover:text-foreground transition-colors">Adventure</a></li>
@@ -241,13 +240,13 @@ function App() {
                   <li><a href="#" className="hover:text-foreground transition-colors">Devotional</a></li>
                   <li><a href="#" className="hover:text-foreground transition-colors">Nightlife</a></li>
                 </ul>
-              </div>
+              </div> */}
             </div>
 
             <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row items-center justify-between">
               <p className="text-sm text-muted-foreground">
                 © 2025
-                 TravelBuddy AI. All rights reserved.
+                 TravelBuddy. All rights reserved.
               </p>
               <p className="text-sm text-muted-foreground flex items-center gap-1 mt-4 md:mt-0">
                 Made with <Heart className="h-4 w-4 text-red-500" /> for travelers worldwide
