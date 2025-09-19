@@ -15,12 +15,12 @@ import { Badge } from '@/components/ui/Badge'
 import { FullPageLoader } from '@/components/ui/LoadingSpinner'
 
 import { useTripPlanner } from '@/hooks/useTripPlanner'
-import { TRAVEL_THEMES } from '@/utils/constants'
+// import { TRAVEL_THEMES } from '@/utils/constants'
 import type { TripRequest } from '@/types'
 
 export function HomePage() {
   const [showResults, setShowResults] = useState(false)
-  const [animateStats, setAnimateStats] = useState(false)
+  const [, setAnimateStats] = useState(false)
 
   const {
     planTrip,
@@ -80,12 +80,12 @@ export function HomePage() {
   }
 
   // Stats for the hero section
-  const stats = [
-    { label: 'Happy Travelers', value: '10,000+', icon: Users },
-    { label: 'Destinations', value: '500+', icon: MapPin },
-    { label: 'Success Rate', value: '98%', icon: TrendingUp },
-    { label: 'Average Rating', value: '4.9/5', icon: Star },
-  ]
+  // const stats = [
+  //   { label: 'Happy Travelers', value: '10,000+', icon: Users },
+  //   { label: 'Destinations', value: '500+', icon: MapPin },
+  //   { label: 'Success Rate', value: '98%', icon: TrendingUp },
+  //   { label: 'Average Rating', value: '4.9/5', icon: Star },
+  // ]
 
   const features = [
     {
