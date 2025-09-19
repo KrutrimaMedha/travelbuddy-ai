@@ -14,7 +14,8 @@ class TravelPlanningTool:
     """Travel Planning tools using SERP API as ADK Function tool"""
 
     def __init__(self, api_key: str = None):
-        self.api_key = 'a3b43bb01047753faf2510ce107cbb89259fbad41707e1365ec6a14ef2d41e85' or os.getenv("SERP_API_KEY")
+        # Prefer explicit api_key param, then environment variable
+        self.api_key = api_key or os.getenv("SERP_API_KEY")
         self.has_valid_api_key = self.api_key and self.api_key != "your_serp_api_key_here" and len(self.api_key) > 10
         self.base_url = "https://serpapi.com/search"
 

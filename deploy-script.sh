@@ -41,7 +41,7 @@ gcloud run deploy "$BACKEND_SERVICE_NAME" \
   --memory 512Mi \
   --cpu 1 \
   --max-instances 10 \
-  --set-env-vars ENVIRONMENT=production \
+  --set-env-vars ENVIRONMENT=production,GOOGLE_API_KEY=${GOOGLE_API_KEY:-},GEMINI_API_KEY=${GEMINI_API_KEY:-},SERP_API_KEY=${SERP_API_KEY:-} \
   --port 8080
 
 # Get backend URL

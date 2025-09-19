@@ -93,6 +93,8 @@ Required repository secrets (Settings → Secrets and variables → Actions):
 - `GCP_AR_REPOSITORY` = `travelbuddy`
 - `GCP_WIF_PROVIDER` = `projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/github-pool/providers/github`
 - `GCP_SERVICE_ACCOUNT` = `gh-deployer@primal-carport-462506-a0.iam.gserviceaccount.com`
+ - `GEMINI_API_KEY` and/or `GOOGLE_API_KEY` = Google Generative AI key (one is sufficient)
+ - `SERP_API_KEY` = SerpApi key (optional; enables live search)
 
 Images are pushed to:
 
@@ -103,6 +105,7 @@ ${GCP_AR_LOCATION}-docker.pkg.dev/${GCP_PROJECT_ID}/${GCP_AR_REPOSITORY}/${SERVI
 Notes:
 - Workflows assume the Artifact Registry repo already exists (least privilege). They do not attempt to create it.
 - The frontend build uses Vite and reads `VITE_API_URL` from `travel_planner_ui/.env.production`, which the workflow writes from the deployed backend URL.
+ - Backend picks up `GEMINI_API_KEY`/`GOOGLE_API_KEY` and `SERP_API_KEY` from Cloud Run environment variables set during deploy.
 
 ## Local Script Deploy
 
@@ -126,4 +129,3 @@ This builds and deploys backend first, then frontend, using the correct Docker c
   - The GitHub identity reached GCP, but impersonation wasn’t allowed. Verify the `roles/iam.workloadIdentityUser` binding and the provider attribute condition matches `KrutrimaMedha/travelbuddy-ai` and your branch.
 - Frontend can’t reach backend
   - Confirm the frontend `.env.production` was written and that Cloud Run ingress allows unauthenticated access for the backend.
-

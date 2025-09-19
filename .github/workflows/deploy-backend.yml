@@ -64,6 +64,10 @@ jobs:
         run: docker push "$IMAGE_URI"
 
       - name: Deploy service
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SERP_API_KEY: ${{ secrets.SERP_API_KEY }}
         run: |
           gcloud run deploy "$SERVICE_NAME" \
             --image "$IMAGE_URI" \
@@ -74,7 +78,7 @@ jobs:
             --memory 512Mi \
             --cpu 1 \
             --max-instances 10 \
-            --set-env-vars ENVIRONMENT=production \
+            --set-env-vars ENVIRONMENT=production,GOOGLE_API_KEY=$GOOGLE_API_KEY,GEMINI_API_KEY=$GEMINI_API_KEY,SERP_API_KEY=$SERP_API_KEY \
             --port 8080
 
       - name: Output backend URL
