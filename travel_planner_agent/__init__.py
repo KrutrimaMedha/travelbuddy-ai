@@ -8,8 +8,8 @@ __version__ = "1.0.0"
 __author__ = "Travel Planner Team"
 __description__ = "AI-powered personalized travel planning system"
 
-from .travel_planning_agent import GeminiTravelPlanningAgent
-from .travel_planning_tool import TravelPlanningTool
+from .src.travel_planner_agent.travel_planning_agent import GeminiTravelPlanningAgent
+from .src.travel_planner_agent.travel_planning_tool import TravelPlanningTool
 
 __all__ = [
     "GeminiTravelPlanningAgent",

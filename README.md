@@ -4,11 +4,11 @@ An AI-powered travel planning assistant that helps users create personalized tra
 
 ## 🎯 Main Package
 
-This repository contains the **travel_planner** package - a complete, self-contained AI travel planning system.
+This repository contains the **travel_planner_agent** package - a complete, self-contained AI travel planning system.
 
 ```
 travelbuddy-ai/
-├── travel_planner/          # 🎯 Complete Travel Planning Package
+├── travel_planner_agent/    # 🎯 Complete Travel Planning Package
 │   ├── src/                 # Source code
 │   ├── tests/               # Test suite  
 │   ├── examples/            # Example scripts
@@ -21,14 +21,14 @@ travelbuddy-ai/
 
 ## 🚀 Quick Start
 
-**Navigate to the travel_planner package and follow its complete setup guide:**
+**Navigate to the travel_planner_agent package and follow its complete setup guide:**
 
 ```bash
-cd travel_planner
-# Follow the detailed instructions in travel_planner/README.md
+cd travel_planner_agent
+# Follow the detailed instructions in travel_planner_agent/README.md
 ```
 
-The travel_planner package contains:
+The travel_planner_agent package contains:
 - ✅ Complete setup instructions with uv
 - ✅ Full documentation and examples  
 - ✅ Comprehensive test suite
@@ -36,7 +36,7 @@ The travel_planner package contains:
 
 ## 📖 Complete Documentation
 
-**👉 See [travel_planner/README.md](travel_planner/README.md) for:**
+**👉 See [travel_planner_agent/README.md](travel_planner_agent/README.md) for:**
 - 🛠️ Complete setup instructions with uv
 - 🧪 Testing guide and commands
 - 💡 Usage examples and API reference
@@ -70,7 +70,7 @@ cp .env.example .env
 
 1. Fork the repository
 2. Create a feature branch
-3. Make changes in the `travel_planner/` directory
+3. Make changes in the `travel_planner_agent/` directory
 4. Run tests: `uv run pytest`
 5. Submit a pull request
 
@@ -80,10 +80,10 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
-- 📖 **Documentation**: [travel_planner/README.md](travel_planner/README.md)
+- 📖 **Documentation**: [travel_planner_agent/README.md](travel_planner_agent/README.md)
 - 🐛 **Issues**: GitHub Issues
 - 💬 **Discussions**: GitHub Discussions
 
 ---
 
-**🎯 For the complete setup guide and detailed documentation, see [travel_planner/README.md](travel_planner/README.md)**
+**🎯 For the complete setup guide and detailed documentation, see [travel_planner_agent/README.md](travel_planner_agent/README.md)**

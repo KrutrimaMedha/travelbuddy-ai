@@ -224,7 +224,7 @@ tmp/
 # Log files
 *.log
 logs/
-travel_planner/logs/
+travel_planner_agent/logs/
 
 # Database files (if any)
 *.db
