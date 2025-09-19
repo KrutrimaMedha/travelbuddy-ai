@@ -65,6 +65,7 @@ jobs:
             --image "$IMAGE_URI" \
             --platform managed \
             --region "$REGION" \
+            --service-account "${{ secrets.GCP_RUNTIME_SA }}" \
             --allow-unauthenticated \
             --memory 512Mi \
             --cpu 1 \
