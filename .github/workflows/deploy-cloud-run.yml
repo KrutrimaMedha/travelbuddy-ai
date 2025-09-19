@@ -1,105 +1,105 @@
-name: Deploy to Cloud Run
+# name: Deploy to Cloud Run
 
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch: {}
+# on:
+#   push:
+#     branches: [ main ]
+#   workflow_dispatch: {}
 
-permissions:
-  contents: read
-  id-token: write
+# permissions:
+#   contents: read
+#   id-token: write
 
-concurrency:
-  group: cloud-run-${{ github.ref }}
-  cancel-in-progress: false
+# concurrency:
+#   group: cloud-run-${{ github.ref }}
+#   cancel-in-progress: false
 
-env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  REGION: ${{ secrets.GCP_REGION }}
-  BACKEND_SERVICE: travelbuddy-backend
-  FRONTEND_SERVICE: travelbuddy-frontend
+# env:
+#   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+#   REGION: ${{ secrets.GCP_REGION }}
+#   BACKEND_SERVICE: travelbuddy-backend
+#   FRONTEND_SERVICE: travelbuddy-frontend
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
 
-      - name: Authenticate to Google Cloud (WIF)
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-          project_id: ${{ env.PROJECT_ID }}
+#       - name: Authenticate to Google Cloud (WIF)
+#         uses: google-github-actions/auth@v2
+#         with:
+#           workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+#           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+#           project_id: ${{ env.PROJECT_ID }}
 
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ env.PROJECT_ID }}
+#       - name: Setup gcloud
+#         uses: google-github-actions/setup-gcloud@v2
+#         with:
+#           project_id: ${{ env.PROJECT_ID }}
 
-      - name: Configure Docker for gcr.io
-        run: gcloud auth configure-docker gcr.io -q
+#       - name: Configure Docker for gcr.io
+#         run: gcloud auth configure-docker gcr.io -q
 
-      # Build and deploy backend
-      - name: Build backend image
-        run: |
-          docker build \
-            -t gcr.io/$PROJECT_ID/$BACKEND_SERVICE \
-            -f travel_planner_ui/server/Dockerfile \
-            .
+#       # Build and deploy backend
+#       - name: Build backend image
+#         run: |
+#           docker build \
+#             -t gcr.io/$PROJECT_ID/$BACKEND_SERVICE \
+#             -f travel_planner_ui/server/Dockerfile \
+#             .
 
-      - name: Push backend image
-        run: docker push gcr.io/$PROJECT_ID/$BACKEND_SERVICE
+#       - name: Push backend image
+#         run: docker push gcr.io/$PROJECT_ID/$BACKEND_SERVICE
 
-      - name: Deploy backend service
-        run: |
-          gcloud run deploy $BACKEND_SERVICE \
-            --image gcr.io/$PROJECT_ID/$BACKEND_SERVICE \
-            --platform managed \
-            --region $REGION \
-            --allow-unauthenticated \
-            --memory 512Mi \
-            --cpu 1 \
-            --max-instances 10 \
-            --set-env-vars ENVIRONMENT=production \
-            --port 8080
+#       - name: Deploy backend service
+#         run: |
+#           gcloud run deploy $BACKEND_SERVICE \
+#             --image gcr.io/$PROJECT_ID/$BACKEND_SERVICE \
+#             --platform managed \
+#             --region $REGION \
+#             --allow-unauthenticated \
+#             --memory 512Mi \
+#             --cpu 1 \
+#             --max-instances 10 \
+#             --set-env-vars ENVIRONMENT=production \
+#             --port 8080
 
-      - name: Get backend URL
-        id: backend_url
-        run: |
-          URL=$(gcloud run services describe $BACKEND_SERVICE --platform managed --region $REGION --format 'value(status.url)')
-          echo "url=$URL" >> "$GITHUB_OUTPUT"
+#       - name: Get backend URL
+#         id: backend_url
+#         run: |
+#           URL=$(gcloud run services describe $BACKEND_SERVICE --platform managed --region $REGION --format 'value(status.url)')
+#           echo "url=$URL" >> "$GITHUB_OUTPUT"
 
-      # Build and deploy frontend
-      - name: Write frontend env
-        run: echo "VITE_API_URL=${{ steps.backend_url.outputs.url }}" > travel_planner_ui/.env.production
+#       # Build and deploy frontend
+#       - name: Write frontend env
+#         run: echo "VITE_API_URL=${{ steps.backend_url.outputs.url }}" > travel_planner_ui/.env.production
 
-      - name: Build frontend image
-        run: |
-          docker build \
-            -t gcr.io/$PROJECT_ID/$FRONTEND_SERVICE \
-            -f travel_planner_ui/Dockerfile \
-            travel_planner_ui
+#       - name: Build frontend image
+#         run: |
+#           docker build \
+#             -t gcr.io/$PROJECT_ID/$FRONTEND_SERVICE \
+#             -f travel_planner_ui/Dockerfile \
+#             travel_planner_ui
 
-      - name: Push frontend image
-        run: docker push gcr.io/$PROJECT_ID/$FRONTEND_SERVICE
+#       - name: Push frontend image
+#         run: docker push gcr.io/$PROJECT_ID/$FRONTEND_SERVICE
 
-      - name: Deploy frontend service
-        run: |
-          gcloud run deploy $FRONTEND_SERVICE \
-            --image gcr.io/$PROJECT_ID/$FRONTEND_SERVICE \
-            --platform managed \
-            --region $REGION \
-            --allow-unauthenticated \
-            --memory 256Mi \
-            --cpu 1 \
-            --max-instances 5 \
-            --port 8080
+#       - name: Deploy frontend service
+#         run: |
+#           gcloud run deploy $FRONTEND_SERVICE \
+#             --image gcr.io/$PROJECT_ID/$FRONTEND_SERVICE \
+#             --platform managed \
+#             --region $REGION \
+#             --allow-unauthenticated \
+#             --memory 256Mi \
+#             --cpu 1 \
+#             --max-instances 5 \
+#             --port 8080
 
-      - name: Output service URLs
-        run: |
-          echo "Backend: ${{ steps.backend_url.outputs.url }}"
-          echo -n "Frontend: "
-          gcloud run services describe $FRONTEND_SERVICE --platform managed --region $REGION --format 'value(status.url)'
+#       - name: Output service URLs
+#         run: |
+#           echo "Backend: ${{ steps.backend_url.outputs.url }}"
+#           echo -n "Frontend: "
+#           gcloud run services describe $FRONTEND_SERVICE --platform managed --region $REGION --format 'value(status.url)'
 
