@@ -719,7 +719,7 @@ export function TripResultsDisplay({
         const destination = (tripData.structured_input?.destination && tripData.structured_input.destination !== 'Not specified')
           ? tripData.structured_input.destination
           : 'Your Destination'
-        const theme = (tripData.structured_input?.theme && tripData.structured_input.theme !== 'Not specified')
+        const theme = (tripData.structured_input?.theme)
           ? tripData.structured_input.theme
           : 'Adventure'
         return {
@@ -852,7 +852,7 @@ export function TripResultsDisplay({
     const destination = (tripData.structured_input?.destination && tripData.structured_input.destination !== 'Not specified')
       ? tripData.structured_input.destination
       : 'Your Destination'
-    const theme = (tripData.structured_input?.theme && tripData.structured_input.theme !== 'Not specified')
+    const theme = (tripData.structured_input?.theme)
       ? tripData.structured_input.theme
       : 'Adventure'
     const budget = structuredBudget
@@ -976,7 +976,7 @@ export function TripResultsDisplay({
     const destination = (tripData.structured_input?.destination && tripData.structured_input.destination !== 'Not specified')
       ? tripData.structured_input.destination
       : 'Your Destination'
-    const theme = (tripData.structured_input?.theme && tripData.structured_input.theme !== 'Not specified')
+    const theme = (tripData.structured_input?.theme)
       ? tripData.structured_input.theme
       : 'Adventure'
 
