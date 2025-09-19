@@ -170,7 +170,7 @@ export const travelPlannerApi = {
     feasible_durations: Array<{
       label: string
       value: string
-      days: number
+      days?: number
     }>
     message: string
     travel_info: {
