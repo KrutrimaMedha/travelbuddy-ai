@@ -249,12 +249,12 @@ The agent returns structured JSON responses with:
 ```bash
 # Clone and setup
 git clone <repository-url>
-cd travel-planner
+cd travel_planner_agent
 
 # Install with development dependencies
 uv venv
 source .venv/bin/activate
-uv pip install -e ".[dev]"
+uv pip install -e .
 ```
 
 ### Code Quality Tools
