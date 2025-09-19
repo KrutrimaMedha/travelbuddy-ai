@@ -1,32 +1,26 @@
-# Frontend Dockerfile
-FROM node:18-alpine AS build
-
-# Set working directory
+# Stage 1: build
+FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# copy dependency files first (better caching)
+COPY travel_planner_ui/package*.json ./
 
-# Install all dependencies including dev dependencies for build
-RUN npm install
+# install dependencies
+RUN npm ci
 
-# Copy source code
-COPY . .
+# copy rest of frontend source
+COPY travel_planner_ui/ .
 
-# Build the application
+# copy env file created by workflow
+COPY travel_planner_ui/.env.production .env.production
+
+# build frontend
 RUN npm run build
 
-# Production stage
+# Stage 2: serve static files
 FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy built assets from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Expose port (Cloud Run uses 8080)
+# expose port 8080 for Cloud Run
 EXPOSE 8080
-
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
