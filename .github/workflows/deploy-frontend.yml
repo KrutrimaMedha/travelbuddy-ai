@@ -1,0 +1,101 @@
+name: Deploy Frontend (Cloud Run + Artifact Registry)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'travel_planner_ui/**'
+      - '!travel_planner_ui/server/**'
+      - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: cloud-run-frontend-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: ${{ secrets.GCP_REGION }}
+  AR_LOCATION: ${{ secrets.GCP_AR_LOCATION }}
+  AR_REPOSITORY: ${{ secrets.GCP_AR_REPOSITORY }}
+  SERVICE_NAME: travelbuddy-frontend
+  BACKEND_SERVICE: travelbuddy-backend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud (WIF)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Get backend URL
+        id: backend
+        run: |
+          URL=$(gcloud run services describe "$BACKEND_SERVICE" --platform managed --region "$REGION" --format 'value(status.url)')
+          if [[ -z "$URL" ]]; then
+            echo "Backend not found or not deployed in region $REGION" >&2
+            exit 1
+          fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Write frontend env
+        run: echo "VITE_API_URL=${{ steps.backend.outputs.url }}" > travel_planner_ui/.env.production
+
+      - name: Ensure Artifact Registry repo exists
+        run: |
+          set -e
+          if ! gcloud artifacts repositories describe "$AR_REPOSITORY" --location="$AR_LOCATION" >/dev/null 2>&1; then
+            gcloud artifacts repositories create "$AR_REPOSITORY" \
+              --repository-format=docker \
+              --location="$AR_LOCATION" \
+              --description="Docker repo for TravelBuddy"
+          fi
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          REG_HOST="$AR_LOCATION-docker.pkg.dev"
+          gcloud auth configure-docker "$REG_HOST" -q
+
+      - name: Build image
+        env:
+          REG_HOST: ${{ env.AR_LOCATION }}-docker.pkg.dev
+        run: |
+          IMAGE_URI="$REG_HOST/$PROJECT_ID/$AR_REPOSITORY/$SERVICE_NAME:${GITHUB_SHA}"
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+          docker build -t "$IMAGE_URI" -f travel_planner_ui/Dockerfile travel_planner_ui
+
+      - name: Push image
+        run: docker push "$IMAGE_URI"
+
+      - name: Deploy service
+        run: |
+          gcloud run deploy "$SERVICE_NAME" \
+            --image "$IMAGE_URI" \
+            --platform managed \
+            --region "$REGION" \
+            --allow-unauthenticated \
+            --memory 256Mi \
+            --cpu 1 \
+            --max-instances 5 \
+            --port 8080
+
+      - name: Output frontend URL
+        run: |
+          gcloud run services describe "$SERVICE_NAME" --platform managed --region "$REGION" --format 'value(status.url)'
+
