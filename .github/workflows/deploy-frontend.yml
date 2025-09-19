@@ -57,16 +57,6 @@ jobs:
       - name: Write frontend env
         run: echo "VITE_API_URL=${{ steps.backend.outputs.url }}" > travel_planner_ui/.env.production
 
-      - name: Ensure Artifact Registry repo exists
-        run: |
-          set -e
-          if ! gcloud artifacts repositories describe "$AR_REPOSITORY" --location="$AR_LOCATION" >/dev/null 2>&1; then
-            gcloud artifacts repositories create "$AR_REPOSITORY" \
-              --repository-format=docker \
-              --location="$AR_LOCATION" \
-              --description="Docker repo for TravelBuddy"
-          fi
-
       - name: Configure Docker for Artifact Registry
         run: |
           REG_HOST="$AR_LOCATION-docker.pkg.dev"
@@ -98,4 +88,3 @@ jobs:
       - name: Output frontend URL
         run: |
           gcloud run services describe "$SERVICE_NAME" --platform managed --region "$REGION" --format 'value(status.url)'
-
