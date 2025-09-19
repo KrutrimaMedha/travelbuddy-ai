@@ -44,6 +44,12 @@ The travel_planner_agent package contains:
 - 🔑 API keys setup
 - 🚀 Quick start guide
 
+## ☁️ Cloud Run Deployment
+
+For CI/CD with GitHub Actions, Workload Identity Federation, and Artifact Registry setup, see:
+
+- docs/DEPLOYMENT.md
+
 ## ✨ Key Features
 
 - 🤖 **AI-Powered Planning**: Google Generative AI integration
