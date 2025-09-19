@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
-  MapPin, Sparkles, Users, Star,
-  ArrowRight, TrendingUp, Globe,
+  Sparkles, 
+  ArrowRight, Globe,
   CheckCircle2, Zap, Shield, Headphones
 } from 'lucide-react'
 import { toast } from 'sonner'
