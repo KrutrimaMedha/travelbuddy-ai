@@ -127,7 +127,7 @@ export function HomePage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-        <div className="container mx-auto px-4 py-20">
+        <div className="container mx-auto px-4 py-20 pb-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -149,7 +149,7 @@ export function HomePage() {
               tailored to your preferences. Your dream vacation is just a few clicks away.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {/* <div className="flex flex-wrap justify-center gap-4 mb-12">
               {TRAVEL_THEMES.slice(0, 4).map((theme, index) => (
                 <motion.div
                   key={theme.id}
@@ -165,10 +165,10 @@ export function HomePage() {
                   </Badge>
                 </motion.div>
               ))}
-            </div>
+            </div> */}
 
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {stats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
@@ -186,13 +186,13 @@ export function HomePage() {
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
                 </motion.div>
               ))}
-            </div>
+            </div> */}
           </motion.div>
         </div>
       </section>
 
       {/* Planning Form Section */}
-      <section id="trip-planner" className="py-20">
+      <section id="trip-planner" className="pt-10 pb-20">
         <div className="container mx-auto px-4">
           {!showResults ? (
             <motion.div
@@ -240,40 +240,7 @@ export function HomePage() {
           </div>
         </section>
       )}
-
-      {/* Comprehensive Search Demo Section */}
-      <section id="search-demo" className="py-20 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <Badge className="mb-4 text-sm px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white border-none">
-              <Zap className="h-4 w-4 mr-2" />
-              Live AI Search Demo
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Experience <span className="gradient-text">Real-Time</span> Travel Search
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              See our AI-powered Google search integration in action. Watch as we fetch restaurants,
-              hotels, weather, local markets, and destination details in real-time using GenAI agent orchestration.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-          </motion.div>
-        </div>
-      </section>
-
+    
       {/* Features Section */}
       {!showResults && (
         <section id="features" className="py-20 bg-secondary/30">
