@@ -1,26 +1,38 @@
-# Stage 1: build
+# ---- Stage 1: Build ----
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# copy dependency files first (better caching)
-COPY travel_planner_ui/package*.json ./
-
-# install dependencies
+# Better layer caching
+COPY package*.json ./
 RUN npm ci
 
-# copy rest of frontend source
-COPY travel_planner_ui/ .
+# Copy the rest of the app (context is travel_planner_ui/)
+# This includes the .env.production your workflow wrote
+COPY . .
 
-# copy env file created by workflow
-COPY travel_planner_ui/.env.production .env.production
-
-# build frontend
+# Build
 RUN npm run build
 
-# Stage 2: serve static files
+# ---- Stage 2: Serve ----
 FROM nginx:alpine
+
+# Serve the built app
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# expose port 8080 for Cloud Run
+# Cloud Run expects the app to listen on $PORT (we'll use 8080)
+# Replace default server to listen on 8080 and support SPA routing
+COPY <<'EOF' /etc/nginx/conf.d/default.conf
+server {
+  listen 8080;
+  server_name _;
+  root /usr/share/nginx/html;
+  index index.html;
+
+  location / {
+    try_files $uri /index.html;
+  }
+}
+EOF
+
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
