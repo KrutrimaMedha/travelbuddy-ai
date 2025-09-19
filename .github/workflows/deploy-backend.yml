@@ -6,7 +6,11 @@ on:
     paths:
       - 'travel_planner_ui/server/**'
       - 'travel_planner_agent/**'
-      - '.github/workflows/deploy-backend.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'travel_planner_ui/server/**'
+      - 'travel_planner_agent/**'
   workflow_dispatch: {}
 
 permissions:
