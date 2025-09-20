@@ -1078,11 +1078,10 @@ export function TripResultsDisplay({
       const tripName = `${safeTrip.trip_overview.source} to ${safeTrip.trip_overview.destination} - ${safeTrip.trip_overview.duration}`
 
       // Show mock success message
-      showMockMessage('success', `✅ Trip "${tripName}" has been saved to your travel portfolio! You can access it anytime from your saved trips.`)
 
-      // if (onSaveTrip) {
-      //   onSaveTrip({ ...safeTrip, name: tripName })
-      // }
+      if (onSaveTrip) {
+          showMockMessage('success', `✅ Trip "${tripName}" has been saved to your travel portfolio! You can access it anytime from your saved trips.`)
+      }
       setSavedTrip(true)
     }
   }
