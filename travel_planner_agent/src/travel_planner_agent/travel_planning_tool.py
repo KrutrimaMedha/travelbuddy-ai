@@ -226,9 +226,13 @@ class TravelPlanningTool:
     async def _get_fallback_search_results(self, query: str, num_results: int) -> Dict[str, Any]:
         """Generate realistic fallback search results for demonstration"""
         import asyncio
+        import re
 
         # Small delay to simulate network request
         await asyncio.sleep(0.5)
+
+        # Extract destination from query - look for location names
+        destination = self._extract_destination_from_query(query)
 
         # Generate relevant results based on query keywords
         results = []
@@ -236,23 +240,23 @@ class TravelPlanningTool:
         if "hotel" in query.lower():
             results = [
                 {
-                    "title": "Top Hotels in Kerala - Book Now at Best Prices",
-                    "link": "https://www.booking.com/kerala-hotels",
-                    "snippet": "Find the best hotels in Kerala with great amenities. Free WiFi, swimming pool, and excellent service. Starting from Rs2000 per night.",
+                    "title": f"Top Hotels in {destination} - Book Now at Best Prices",
+                    "link": f"https://www.booking.com/{destination.lower()}-hotels",
+                    "snippet": f"Find the best hotels in {destination} with great amenities. Free WiFi, swimming pool, and excellent service. Starting from Rs2000 per night.",
                     "position": 1,
                     "source": "booking.com"
                 },
                 {
-                    "title": "Kerala Beach Resorts | Luxury Hotels & Accommodations",
-                    "link": "https://www.kerala-tourism.com/hotels",
-                    "snippet": "Experience luxury accommodations in Kerala with beachfront views, ayurvedic spas, and traditional Kerala cuisine.",
+                    "title": f"{destination} Beach Resorts | Luxury Hotels & Accommodations",
+                    "link": f"https://www.{destination.lower()}-tourism.com/hotels",
+                    "snippet": f"Experience luxury accommodations in {destination} with scenic views, spas, and traditional cuisine.",
                     "position": 2,
-                    "source": "kerala-tourism.com"
+                    "source": f"{destination.lower()}-tourism.com"
                 },
                 {
-                    "title": "Budget Hotels in Kerala | Affordable Stays",
-                    "link": "https://www.tripadvisor.com/kerala-budget-hotels",
-                    "snippet": "Clean, comfortable and affordable hotels across Kerala. Great reviews from travelers. Prices starting from Rs1200 per night.",
+                    "title": f"Budget Hotels in {destination} | Affordable Stays",
+                    "link": f"https://www.tripadvisor.com/{destination.lower()}-budget-hotels",
+                    "snippet": f"Clean, comfortable and affordable hotels across {destination}. Great reviews from travelers. Prices starting from Rs1200 per night.",
                     "position": 3,
                     "source": "tripadvisor.com"
                 }
@@ -260,33 +264,33 @@ class TravelPlanningTool:
         elif "restaurant" in query.lower() or "food" in query.lower():
             results = [
                 {
-                    "title": "Best Restaurants in Kerala - Authentic Kerala Cuisine",
-                    "link": "https://www.zomato.com/kerala-restaurants",
-                    "snippet": "Discover the best restaurants serving traditional Kerala dishes. Fresh seafood, coconut curry, and spicy delicacies.",
+                    "title": f"Best Restaurants in {destination} - Authentic Local Cuisine",
+                    "link": f"https://www.zomato.com/{destination.lower()}-restaurants",
+                    "snippet": f"Discover the best restaurants serving traditional {destination} dishes. Fresh local ingredients, regional specialties, and authentic flavors.",
                     "position": 1,
                     "source": "zomato.com"
                 },
                 {
-                    "title": "Top 10 Must-Try Kerala Food Places",
-                    "link": "https://www.foodie-kerala.com/top-restaurants",
-                    "snippet": "From street food to fine dining, explore Kerala's culinary scene. Don't miss the fish curry, appam, and payasam.",
+                    "title": f"Top 10 Must-Try {destination} Food Places",
+                    "link": f"https://www.foodie-{destination.lower()}.com/top-restaurants",
+                    "snippet": f"From street food to fine dining, explore {destination}'s culinary scene. Don't miss the local specialties and regional dishes.",
                     "position": 2,
-                    "source": "foodie-kerala.com"
+                    "source": f"foodie-{destination.lower()}.com"
                 }
             ]
         elif "attraction" in query.lower() or "places" in query.lower() or "visit" in query.lower():
             results = [
                 {
-                    "title": "Top Places to Visit in Kerala | Tourist Attractions",
-                    "link": "https://www.kerala.gov.in/tourist-places",
-                    "snippet": "Explore backwaters, hill stations, beaches, and wildlife sanctuaries. Must-visit places include Munnar, Alleppey, and Kochi.",
+                    "title": f"Top Places to Visit in {destination} | Tourist Attractions",
+                    "link": f"https://www.{destination.lower()}.gov.in/tourist-places",
+                    "snippet": f"Explore the best attractions, heritage sites, natural beauty, and cultural landmarks. Must-visit places in {destination} for all travelers.",
                     "position": 1,
-                    "source": "kerala.gov.in"
+                    "source": f"{destination.lower()}.gov.in"
                 },
                 {
-                    "title": "Kerala Tourism Guide - Best Destinations & Activities",
-                    "link": "https://www.incredibleindia.org/kerala",
-                    "snippet": "God's Own Country offers houseboat cruises, tea plantations, spice gardens, and beautiful beaches for unforgettable experiences.",
+                    "title": f"{destination} Tourism Guide - Best Destinations & Activities",
+                    "link": f"https://www.incredibleindia.org/{destination.lower()}",
+                    "snippet": f"{destination} offers amazing experiences, cultural heritage, beautiful landscapes, and memorable activities for unforgettable journeys.",
                     "position": 2,
                     "source": "incredibleindia.org"
                 }
@@ -295,16 +299,16 @@ class TravelPlanningTool:
             # Generic travel results
             results = [
                 {
-                    "title": f"Travel Guide for {query} - Complete Information",
+                    "title": f"Travel Guide for {destination} - Complete Information",
                     "link": "https://www.travel-guide.com",
-                    "snippet": "Comprehensive travel information, tips, and recommendations for your perfect trip. Includes hotels, restaurants, and attractions.",
+                    "snippet": f"Comprehensive travel information, tips, and recommendations for your perfect trip to {destination}. Includes hotels, restaurants, and attractions.",
                     "position": 1,
                     "source": "travel-guide.com"
                 },
                 {
-                    "title": f"Best Travel Deals for {query} | Compare Prices",
+                    "title": f"Best Travel Deals for {destination} | Compare Prices",
                     "link": "https://www.travel-deals.com",
-                    "snippet": "Find the best travel deals and packages. Compare prices from multiple providers for flights, hotels, and activities.",
+                    "snippet": f"Find the best travel deals and packages for {destination}. Compare prices from multiple providers for flights, hotels, and activities.",
                     "position": 2,
                     "source": "travel-deals.com"
                 }
@@ -325,6 +329,42 @@ class TravelPlanningTool:
                 "source": "fallback_data"
             },
         }
+
+    def _extract_destination_from_query(self, query: str) -> str:
+        """Extract destination name from search query"""
+        import re
+
+        # Remove common search terms to isolate location
+        query_clean = query.lower()
+        remove_terms = ['hotel', 'restaurant', 'attraction', 'weather', 'places', 'visit', 'food', 'dining', 'accommodation', 'booking', 'address', 'phone', 'contact', 'details', 'menu', 'local', 'tourist', 'spots', 'timings', 'entry', 'fees', 'markets', 'shopping', 'bazaar', 'handmade', 'crafts', 'products', 'attractions', 'driving', 'distance', 'km', 'time', 'hours', 'route']
+
+        for term in remove_terms:
+            query_clean = query_clean.replace(term, ' ')
+
+        # Clean up extra spaces
+        query_clean = ' '.join(query_clean.split())
+
+        # Extract meaningful words (likely location names)
+        words = query_clean.split()
+        if words:
+            # Take the first meaningful word as destination (usually the location)
+            destination = words[0].title()
+
+            # If we have multiple words, try to construct a proper location name
+            if len(words) > 1:
+                # Look for common location patterns
+                location_words = []
+                for word in words[:3]:  # Limit to first 3 words
+                    if len(word) > 2 and word.isalpha():  # Only alphabetic words longer than 2 chars
+                        location_words.append(word.title())
+
+                if location_words:
+                    destination = ' '.join(location_words)
+
+            return destination
+
+        # Fallback to a generic destination
+        return "Destination"
 
     async def get_weather_info(
         self, location: str, date_range: str = "current"

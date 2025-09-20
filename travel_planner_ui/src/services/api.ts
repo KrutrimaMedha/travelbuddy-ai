@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import axios, { AxiosResponse } from 'axios'
 import type { TripRequest, TripResponse, BudgetValidation, ApiResponse } from '@/types'

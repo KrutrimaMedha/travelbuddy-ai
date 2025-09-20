@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -100,6 +101,7 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
   validateDurationRef.current = validateDuration
 
   // Debounced budget validation to prevent excessive API calls
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedValidateBudget = useCallback(
     debounce((request: {
       source: string
@@ -177,7 +179,6 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
         return () => clearTimeout(timeoutId)
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchedValues.source, watchedValues.destination, watchedValues.travel_mode])
 
   // Update available durations when validation result changes

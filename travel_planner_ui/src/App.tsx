@@ -39,8 +39,6 @@ function App() {
   }
 
   const navigation = [
-    { name: 'Home', href: '#' },
-    { name: 'Plan Trip', href: '#trip-planner' },
     { name: 'Features', href: '#features' },
     { name: 'About', href: '#about' }
   ]
@@ -74,32 +72,6 @@ function App() {
                   <p className="text-xs text-muted-foreground">Intelligent Trip Planning</p>
                 </div>
               </motion.div>
-
-              {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center space-x-8">
-                {navigation.map((item) => (
-                  <motion.a
-                    key={item.name}
-                    href={item.href}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      if (item.href === '#') {
-                        window.scrollTo({ top: 0, behavior: 'smooth' })
-                      } else {
-                        const element = document.querySelector(item.href)
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth' })
-                        }
-                      }
-                    }}
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                  >
-                    {item.name}
-                  </motion.a>
-                ))}
-              </div>
 
               {/* Actions */}
               <div className="flex items-center gap-2">

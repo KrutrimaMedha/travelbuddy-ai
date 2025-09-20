@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
@@ -11,7 +12,6 @@ import { TripPlanningForm } from '@/components/forms/TripPlanningForm'
 import { TripResultsDisplay } from '@/components/results/TripResultsDisplay'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
 import { FullPageLoader } from '@/components/ui/LoadingSpinner'
 
 import { useTripPlanner } from '@/hooks/useTripPlanner'
@@ -134,7 +134,7 @@ export function HomePage() {
             transition={{ duration: 0.8 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <Badge className="mb-6 text-sm px-4 py-2">
+            {/* <Badge className="mb-6 text-sm px-4 py-2">
               <Sparkles className="h-4 w-4 mr-2" />
               Powered by Advanced AI
             </Badge>
@@ -147,7 +147,7 @@ export function HomePage() {
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Get personalized travel itineraries, smart budget planning, and real-time recommendations
               tailored to your preferences. Your dream vacation is just a few clicks away.
-            </p>
+            </p> */}
 
             {/* <div className="flex flex-wrap justify-center gap-4 mb-12">
               {TRAVEL_THEMES.slice(0, 4).map((theme, index) => (
