@@ -1994,15 +1994,15 @@ function BookingConfirmationModal({
         className="relative w-full max-w-lg mx-4 overflow-hidden rounded-3xl bg-white shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="bg-gradient-to-r from-emt-blue-dark via-emt-blue to-emt-blue-light text-white px-8 py-6">
+        <div className="bg-gradient-to-r from-emt-blue-dark via-emt-blue to-emt-blue-light px-8 py-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.35em] text-white/80">
+              <p className="text-[11px] uppercase tracking-[0.35em] /80">
                 {confirmation.provider}
               </p>
-              <h3 className="mt-2 text-2xl font-semibold text-white">Almost there!</h3>
-              <p className="mt-2 text-sm text-white/85">
-                Secure <span className="font-semibold text-white">{context.hotelName}</span> via EaseMyTrip to finish your stay booking.
+              <h3 className="mt-2 text-2xl font-semibold">Almost there!</h3>
+              <p className="mt-2 text-sm /85">
+                Secure <span className="font-semibold ">{context.hotelName}</span> via EaseMyTrip to finish your stay booking.
               </p>
             </div>
             <Badge variant="secondary" className="bg-white text-emt-blue-dark border-white/40">
@@ -2011,7 +2011,7 @@ function BookingConfirmationModal({
           </div>
           <button
             type="button"
-            className="absolute right-4 top-4 text-white/80 hover:text-white transition-colors"
+            className="absolute right-4 top-4 /80 hover:text-white transition-colors"
             onClick={onClose}
           >
             <span className="text-2xl leading-none">×</span>
@@ -2080,10 +2080,10 @@ function BookingConfirmationModal({
             <button
               type="button"
               onClick={proceedToEaseMyTrip}
-              className="flex-1 inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold transition-all bg-gradient-to-r from-emt-blue-dark via-emt-blue to-emt-blue-light text-white shadow-lg hover:shadow-xl px-6 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emt-blue-light focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+              className="flex-1 inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold transition-all bg-gradient-to-r from-emt-blue-dark via-emt-blue to-emt-blue-light shadow-lg hover:shadow-xl px-6 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emt-blue-light focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
             >
-              <ExternalLink className="h-4 w-4 mr-2 text-white" />
-              <span className="text-white">
+              <ExternalLink className="h-4 w-4 mr-2 " />
+              <span className="">
                 {confirmation.branding?.cta_label || 'Continue to EaseMyTrip'}
               </span>
             </button>
