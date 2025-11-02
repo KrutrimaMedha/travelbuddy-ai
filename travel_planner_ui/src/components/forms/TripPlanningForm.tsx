@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { motion } from 'framer-motion'
-import { MapPin, Calendar, IndianRupee, Users, Car, Bus } from 'lucide-react'
+import { MapPin, Calendar, IndianRupee, Users, Car, Bus, Plane, Hotel, Train } from 'lucide-react'
 
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/Badge'
 import { TRAVEL_THEMES, TRAVEL_MODES, POPULAR_DESTINATIONS, DURATION_OPTIONS, VEHICLE_TYPES, TRANSPORT_OPTIONS } from '@/utils/constants'
 import type { TripRequest } from '@/types'
 import { useTripPlanner } from '@/hooks/useTripPlanner'
+import { cn } from '@/utils/cn'
 
 // Simple debounce utility
 function debounce<T extends (...args: any[]) => void>(func: T, delay: number) {
@@ -63,6 +64,13 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
   const [availableDurations, setAvailableDurations] = useState(DURATION_OPTIONS)
   const [durationValidationMessage, setDurationValidationMessage] = useState<string>('')
 
+  const bookingTabs = [
+    { id: 'flights', label: 'Flights', icon: Plane },
+    { id: 'hotels', label: 'Hotels', icon: Hotel },
+    { id: 'trains', label: 'Trains', icon: Train }
+  ]
+  const activeBookingTab = 'flight'
+
   const {
     validateBudget,
     budgetValidation,
@@ -88,6 +96,13 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
   })
 
   const watchedValues = watch()
+
+  const budgetIsSufficient = Boolean(
+    budgetValidation &&
+      (budgetValidation.valid === true ||
+        (budgetValidation as any).budget_sufficient === true ||
+        (budgetValidation as any).status === 'sufficient')
+  )
 
   // Track last validation parameters to prevent duplicate calls
   const lastBudgetValidationRef = useRef<string>('')
@@ -152,8 +167,7 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
     return () => {
       debouncedValidateBudget.cancel()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watchedValues.source, watchedValues.destination, watchedValues.travel_mode, watchedValues.duration, watchedValues.budget])
+  }, [debouncedValidateBudget, watchedValues.source, watchedValues.destination, watchedValues.travel_mode, watchedValues.duration, watchedValues.budget])
 
   // Validate duration when source, destination, or travel mode changes
   useEffect(() => {
@@ -238,23 +252,54 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="w-full max-w-4xl mx-auto">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center gradient-text">
-            Plan Your Perfect Trip
+      <Card className="w-full max-w-5xl mx-auto relative overflow-visible bg-white/95">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emt-blue-dark via-emt-blue to-emt-blue-light" />
+        <CardHeader className="-mx-8 -mt-8 rounded-t-[32px] bg-gradient-to-r from-emt-blue-dark/10 via-white to-emt-blue-light/10 px-8 pt-16 pb-10 text-center space-y-4 border-b border-border/60">
+          <CardTitle className="text-3xl font-semibold text-emt-navy">
+            Smart Flight & Holiday Planner
           </CardTitle>
-          <p className="text-muted-foreground text-center">
-            Let AI create a personalized itinerary tailored to your preferences
+          <p className="text-sm md:text-base text-emt-blue-dark/80 max-w-2xl mx-auto">
+            Let AI discover the best fares, validate your budget, and craft itineraries inspired by EaseMyTrip&apos;s vibrant experience.
           </p>
+          <div className="flex flex-wrap justify-center gap-3 pt-2">
+            {bookingTabs.map((tab) => (
+              <Button
+                key={tab.id}
+                type="button"
+                variant={tab.id === activeBookingTab ? 'gradient' : 'outline'}
+                className={cn(
+                  'px-6 py-2 text-sm font-semibold shadow transition-all flex items-center gap-2',
+                  tab.id === activeBookingTab
+                    ? 'bg-gradient-to-r from-emt-blue-dark via-emt-blue to-emt-blue-light !text-white border-2 border-emt-blue-dark/60 ring-2 ring-emt-blue/30 ring-offset-2 ring-offset-transparent shadow-xl shadow-emt-blue-dark/50 hover:shadow-2xl hover:shadow-emt-blue-dark/60 scale-105'
+                    : 'bg-white text-emt-blue-dark border border-emt-blue hover:bg-emt-sky hover:text-emt-blue-dark'
+                )}
+              >
+                <tab.icon
+                  className={cn(
+                    'h-4 w-4',
+                    tab.id === activeBookingTab ? '!text-white' : 'text-emt-blue'
+                  )}
+                />
+                <span className={cn(tab.id === activeBookingTab ? '!text-white' : '')}>
+                  {tab.label}
+                </span>
+              </Button>
+            ))}
+          </div>
+          <div className="flex justify-center">
+            <Badge variant="secondary" className="mt-4 bg-white text-emt-blue-dark border border-white/60 shadow-sm">
+              Best Price Alerts • Zero Convenience Fee
+            </Badge>
+          </div>
         </CardHeader>
 
-        <CardContent>
-          <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
+        <CardContent className="space-y-8">
+          <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-8">
             {/* Source & Destination */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-primary" />
+                <label className="text-sm font-semibold text-emt-navy flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-emt-blue" />
                   From (Source)
                 </label>
                 <Input
@@ -274,8 +319,8 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-primary" />
+                <label className="text-sm font-semibold text-emt-navy flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-emt-blue" />
                   To (Destination)
                 </label>
                 <Input
@@ -297,7 +342,7 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
 
             {/* Travel Mode Selection */}
             <div className="space-y-3">
-              <label className="text-sm font-medium">Travel Mode</label>
+              <label className="text-sm font-semibold text-emt-navy">Travel Mode</label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {TRAVEL_MODES.map((mode) => (
                   <motion.div
@@ -306,34 +351,39 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
                     whileTap={{ scale: 0.98 }}
                   >
                     <Card
-                      className={`cursor-pointer transition-all ${
+                      className={cn(
+                        'cursor-pointer transition-all',
                         selectedTravelMode === mode.id
-                          ? 'ring-2 ring-primary border-primary bg-primary/5'
-                          : 'hover:border-primary/50'
-                      }`}
+                          ? 'ring-2 ring-emt-blue border-emt-blue bg-emt-sky'
+                          : 'hover:border-emt-blue/40 hover:bg-emt-sky/50'
+                      )}
                       onClick={() => {
                         setValue('travel_mode', mode.id as 'Self' | 'Booking')
                         setSelectedTravelMode(mode.id)
                       }}
                     >
-                      <CardContent className="p-4">
+                      <CardContent className="p-5">
                         <div className="flex items-start gap-3">
                           <div className="text-2xl">{mode.icon}</div>
                           <div className="flex-1">
-                            <h3 className="font-medium">{mode.label}</h3>
-                            <p className="text-xs text-muted-foreground mb-2">
+                            <h3 className="font-semibold text-emt-navy">{mode.label}</h3>
+                            <p className="text-xs text-muted-foreground/90 mb-2">
                               {mode.description}
                             </p>
                             <div className="flex flex-wrap gap-1">
                               {mode.benefits.map((benefit) => (
-                                <Badge key={benefit} variant="secondary" className="text-xs">
+                                <Badge
+                                  key={benefit}
+                                  variant="secondary"
+                                  className="text-[10px] bg-white text-emt-blue-dark border border-border/70"
+                                >
                                   {benefit}
                                 </Badge>
                               ))}
                             </div>
                           </div>
                           {selectedTravelMode === mode.id && (
-                            <div className="text-primary">
+                            <div className="text-emt-orange">
                               {mode.id === 'Self' ? <Car className="h-5 w-5" /> : <Bus className="h-5 w-5" />}
                             </div>
                           )}
@@ -351,7 +401,7 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
             {/* Vehicle/Transport Selection */}
             {selectedTravelMode === 'Self' && (
               <div className="space-y-3">
-                <label className="text-sm font-medium">Select Your Vehicle</label>
+                <label className="text-sm font-semibold text-emt-navy">Select Your Vehicle</label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {VEHICLE_TYPES.map((vehicle) => (
                     <motion.div
@@ -360,25 +410,26 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
                       whileTap={{ scale: 0.98 }}
                     >
                       <Card
-                        className={`cursor-pointer transition-all ${
+                        className={cn(
+                          'cursor-pointer transition-all',
                           selectedVehicleType === vehicle.id
-                            ? 'ring-2 ring-primary border-primary bg-primary/5'
-                            : 'hover:border-primary/50'
-                        }`}
+                            ? 'ring-2 ring-emt-blue border-emt-blue bg-emt-sky'
+                            : 'hover:border-emt-blue/40 hover:bg-emt-sky/50'
+                        )}
                         onClick={() => {
                           setValue('vehicle_type', vehicle.id)
                           setSelectedVehicleType(vehicle.id)
                         }}
                       >
-                        <CardContent className="p-4">
+                        <CardContent className="p-5">
                           <div className="flex items-center gap-3">
                             <div className="text-2xl">{vehicle.icon}</div>
                             <div className="flex-1">
-                              <h3 className="font-medium">{vehicle.label}</h3>
-                              <p className="text-xs text-muted-foreground mb-1">
+                              <h3 className="font-semibold text-emt-navy">{vehicle.label}</h3>
+                              <p className="text-xs text-muted-foreground/90 mb-1">
                                 {vehicle.description}
                               </p>
-                              <Badge variant="secondary" className="text-xs">
+                              <Badge variant="secondary" className="text-[10px] bg-white text-emt-blue-dark border border-border/70">
                                 {vehicle.fuelEfficiency} km/l
                               </Badge>
                             </div>
@@ -393,8 +444,8 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
 
             {selectedTravelMode === 'Booking' && (
               <div className="space-y-3">
-                <label className="text-sm font-medium">Preferred Transport Options</label>
-                <p className="text-xs text-muted-foreground">Select one or more transport types you prefer</p>
+                <label className="text-sm font-semibold text-emt-navy">Preferred Transport Options</label>
+                <p className="text-xs text-muted-foreground/90">Select one or more transport types you prefer</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {TRANSPORT_OPTIONS.map((transport) => (
                     <motion.div
@@ -403,11 +454,12 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
                       whileTap={{ scale: 0.98 }}
                     >
                       <Card
-                        className={`cursor-pointer transition-all ${
+                        className={cn(
+                          'cursor-pointer transition-all',
                           selectedTransportOptions.includes(transport.id)
-                            ? 'ring-2 ring-primary border-primary bg-primary/5'
-                            : 'hover:border-primary/50'
-                        }`}
+                            ? 'ring-2 ring-emt-blue border-emt-blue bg-emt-sky'
+                            : 'hover:border-emt-blue/40 hover:bg-emt-sky/50'
+                        )}
                         onClick={() => {
                           const newSelection = selectedTransportOptions.includes(transport.id)
                             ? selectedTransportOptions.filter(id => id !== transport.id)
@@ -416,10 +468,10 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
                           setValue('transport_preferences', newSelection)
                         }}
                       >
-                        <CardContent className="p-3">
+                        <CardContent className="p-4">
                           <div className="text-center">
-                            <div className="text-xl mb-1">{transport.icon}</div>
-                            <h3 className="text-xs font-medium">{transport.label}</h3>
+                            <div className="text-xl mb-1 text-emt-blue">{transport.icon}</div>
+                            <h3 className="text-xs font-semibold text-emt-navy">{transport.label}</h3>
                           </div>
                         </CardContent>
                       </Card>
@@ -431,7 +483,7 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
 
             {/* Travel Theme Selection */}
             <div className="space-y-3">
-              <label className="text-sm font-medium">Travel Theme</label>
+              <label className="text-sm font-semibold text-emt-navy">Travel Theme</label>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {TRAVEL_THEMES.map((theme) => (
                   <motion.div
@@ -440,23 +492,24 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
                     whileTap={{ scale: 0.98 }}
                   >
                     <Card
-                      className={`cursor-pointer transition-all ${
+                      className={cn(
+                        'cursor-pointer transition-all',
                         selectedTheme === theme.id
-                          ? 'ring-2 ring-primary border-primary'
-                          : 'hover:border-primary/50'
-                      }`}
+                          ? 'ring-2 ring-emt-orange border-emt-orange bg-emt-sky'
+                          : 'hover:border-emt-blue/40 hover:bg-emt-sky/40'
+                      )}
                       onClick={() => {
                         setValue('theme', theme.id as any)
                         setSelectedTheme(theme.id)
                       }}
                     >
-                      <CardContent className="p-4">
+                      <CardContent className="p-5">
                         <div className="text-center">
                           <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${theme.gradient} flex items-center justify-center text-white text-xl mb-2 mx-auto`}>
                             {theme.icon}
                           </div>
-                          <h3 className="font-medium">{theme.label}</h3>
-                          <p className="text-xs text-muted-foreground mt-1">
+                          <h3 className="font-semibold text-emt-navy">{theme.label}</h3>
+                          <p className="text-xs text-muted-foreground/90 mt-1">
                             {theme.description}
                           </p>
                         </div>
@@ -471,7 +524,7 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
             </div>
 
             {/* Budget & Duration */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium flex items-center gap-2">
                   <IndianRupee className="h-4 w-4 text-primary" />
@@ -493,22 +546,19 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
                   <p className="text-xs text-destructive">{errors.budget.message}</p>
                 )}
                 {budgetValidation && (
-                  <div className={`text-xs p-2 rounded ${
-                    (budgetValidation.valid === true || (budgetValidation as any).budget_sufficient === true || (budgetValidation as any).status === 'sufficient')
-                      ? 'bg-green-50 text-green-700 border border-green-200'
-                      : 'bg-red-50 text-red-700 border border-red-200'
-                  }`}>
-                    {/* Show clear sufficient/insufficient status */}
-                    <div className="font-medium mb-1">
-                      {(budgetValidation.valid === true || (budgetValidation as any).budget_sufficient === true || (budgetValidation as any).status === 'sufficient') ? (
-                        <span className="text-green-700">✅ Budget Sufficient</span>
-                      ) : (
-                        <span className="text-red-700">❌ Budget Insufficient</span>
-                      )}
+                  <div
+                    className={cn(
+                      'text-xs p-3 rounded-xl border transition-all',
+                      budgetIsSufficient
+                        ? 'bg-emt-sky text-emt-blue-dark border-emt-blue/30'
+                        : 'bg-red-50 text-red-700 border-red-200'
+                    )}
+                  >
+                    <div className="font-semibold mb-1">
+                      {budgetIsSufficient ? '✅ Budget Sufficient' : '❌ Budget Insufficient'}
                     </div>
 
-                    {/* Show minimum required if budget is insufficient */}
-                    {(budgetValidation.valid !== true && (budgetValidation as any).budget_sufficient !== true && (budgetValidation as any).status !== 'sufficient') && (
+                    {!budgetIsSufficient && (
                       <>
                         {(budgetValidation.minimum_required || (budgetValidation as any).minimum_required) && (
                           <p className="text-red-600 font-medium">
@@ -526,10 +576,9 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
                       </>
                     )}
 
-                    {/* Show positive message if budget is sufficient */}
-                    {(budgetValidation.valid === true || (budgetValidation as any).budget_sufficient === true) && (
-                      <p className="text-green-600">
-                        Your budget is adequate for this trip. Great choice!
+                    {budgetIsSufficient && (
+                      <p className="text-emt-blue-dark">
+                        Your budget comfortably covers this trip. Great choice!
                       </p>
                     )}
                   </div>
@@ -537,8 +586,8 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-primary" />
+                <label className="text-sm font-semibold text-emt-navy flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-emt-blue" />
                   Duration
                   {isValidatingDuration && (
                     <span className="text-xs text-muted-foreground">(Checking...)</span>
@@ -555,17 +604,17 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
                   <p className="text-xs text-destructive">{errors.duration.message}</p>
                 )}
                 {durationValidationMessage && (
-                  <div className="text-xs p-2 rounded bg-blue-50 text-blue-700 border border-blue-200">
+                  <div className="text-xs p-3 rounded-xl bg-emt-sky text-emt-blue-dark border border-emt-blue/30">
                     {durationValidationMessage}
                     {durationValidation?.travel_info && (
-                      <p className="mt-1 text-blue-600">
+                      <p className="mt-1 text-emt-blue">
                         {durationValidation.travel_info.travel_considerations}
                       </p>
                     )}
                   </div>
                 )}
                 {watchedValues.duration === '15+ days' && (
-                  <div className="text-xs p-2 rounded bg-green-50 text-green-700 border border-green-200">
+                  <div className="text-xs p-3 rounded-xl bg-emt-sky text-emt-blue-dark border border-emt-blue/30">
                     ✨ Extended trip selected! Perfect for comprehensive exploration and immersive experiences.
                   </div>
                 )}
@@ -575,8 +624,8 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
             {/* Optional Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-primary" />
+                <label className="text-sm font-semibold text-emt-navy flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-emt-blue" />
                   Start Date (Optional)
                 </label>
                 <DatePicker
@@ -588,8 +637,8 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <Users className="h-4 w-4 text-primary" />
+                <label className="text-sm font-semibold text-emt-navy flex items-center gap-2">
+                  <Users className="h-4 w-4 text-emt-blue" />
                   Number of Travelers
                 </label>
                 <Input
@@ -605,13 +654,13 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
             {/* Submit Button */}
             <Button
               type="submit"
-              variant="gradient"
+              variant="accent"
               size="xl"
-              className="w-full"
+              className="w-full shadow-lg shadow-emt-orange/30"
               loading={isLoading}
               disabled={!isValid || isLoading}
             >
-              {isLoading ? 'Planning Your Trip...' : 'Generate Trip Plan ✨'}
+              {isLoading ? 'Planning Your Trip...' : 'Search Flights & Plan Trip'}
             </Button>
 
           </form>

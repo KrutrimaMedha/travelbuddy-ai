@@ -3,46 +3,46 @@
 @tailwind utilities;
 
 :root {
-  /* Light theme colors */
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+  /* Light theme inspired by EaseMyTrip */
+  --background: 210 100% 98%;
+  --foreground: 220 43% 15%;
   --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222.2 84% 4.9%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96%;
-  --accent-foreground: 222.2 84% 4.9%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
-  --radius: 0.5rem;
+  --card-foreground: 220 43% 15%;
+  --primary: 210 86% 46%;
+  --primary-foreground: 210 100% 98%;
+  --secondary: 207 74% 94%;
+  --secondary-foreground: 214 57% 24%;
+  --muted: 210 60% 95%;
+  --muted-foreground: 215 28% 45%;
+  --accent: 28 100% 60%;
+  --accent-foreground: 31 100% 96%;
+  --destructive: 0 84% 58%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 209 71% 88%;
+  --input: 209 71% 88%;
+  --ring: 210 88% 52%;
+  --radius: 0.75rem;
 }
 
 .dark {
   /* Dark theme colors */
-  --background: 222.2 84% 4.9%;
+  --background: 224 57% 12%;
   --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 84% 4.9%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 224.3 76.3% 94.1%;
+  --card: 225 50% 14%;
+  --card-foreground: 210 40% 96%;
+  --primary: 210 85% 70%;
+  --primary-foreground: 225 47% 14%;
+  --secondary: 218 35% 20%;
+  --secondary-foreground: 210 40% 96%;
+  --muted: 220 30% 22%;
+  --muted-foreground: 216 30% 70%;
+  --accent: 28 95% 60%;
+  --accent-foreground: 225 47% 14%;
+  --destructive: 0 70% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 219 35% 22%;
+  --input: 219 35% 22%;
+  --ring: 210 85% 65%;
 }
 
 * {
@@ -52,8 +52,11 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: hsl(var(--background));
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  background-color: hsl(var(--background));
+  background-image:
+    radial-gradient(120% 120% at 0% 0%, rgba(2, 65, 149, 0.08) 0%, transparent 60%),
+    radial-gradient(80% 80% at 100% 0%, rgba(89, 195, 255, 0.08) 0%, transparent 55%);
   color: hsl(var(--foreground));
   line-height: 1.6;
 }
@@ -104,9 +107,22 @@ body {
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    background: linear-gradient(120deg, #024195 0%, #0b74d6 50%, #59c3ff 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+  .emt-hero-gradient {
+    background: linear-gradient(115deg, #002872 0%, #0b74d6 45%, #59c3ff 100%);
+  }
+
+  .emt-section-soft {
+    background: linear-gradient(180deg, rgba(2, 65, 149, 0.08) 0%, rgba(89, 195, 255, 0.08) 100%);
+  }
+
+  .emt-card-highlight {
+    box-shadow: 0 18px 45px -20px rgba(2, 65, 149, 0.35);
+    border: 1px solid rgba(11, 116, 214, 0.12);
   }
 }

@@ -3,24 +3,25 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/utils/cn'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emt-blue-light focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground shadow hover:bg-primary/90',
+        default: 'bg-gradient-to-r from-emt-blue-dark via-emt-blue to-emt-blue-light text-white shadow-md hover:from-emt-blue hover:via-emt-blue-light hover:to-emt-blue-light/80',
         destructive: 'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
-        outline: 'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
-        secondary: 'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
-        gradient: 'bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg hover:shadow-xl transition-shadow',
+        outline: 'border border-emt-blue text-emt-blue bg-white shadow-sm hover:bg-emt-sky hover:text-emt-blue-dark',
+        secondary: 'bg-emt-sky text-emt-blue font-medium shadow-sm hover:bg-emt-skyLight',
+        ghost: 'text-emt-blue hover:bg-emt-sky',
+        link: 'text-emt-blue underline-offset-4 hover:underline',
+        gradient: 'bg-gradient-to-r from-emt-blue-dark via-emt-blue to-emt-blue-light text-white shadow-lg hover:shadow-xl transition-all',
+        accent: 'bg-emt-orange text-white shadow-md hover:bg-emt-orange-dark',
       },
       size: {
-        default: 'h-9 px-4 py-2',
-        sm: 'h-8 rounded-md px-3 text-xs',
-        lg: 'h-10 rounded-md px-8',
-        xl: 'h-12 rounded-lg px-10 text-base',
-        icon: 'h-9 w-9',
+        default: 'h-10 px-6',
+        sm: 'h-9 px-4 text-xs',
+        lg: 'h-12 px-8 text-base',
+        xl: 'h-14 px-12 text-base',
+        icon: 'h-10 w-10',
       },
     },
     defaultVariants: {
@@ -75,5 +76,4 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
 Button.displayName = 'Button'
 
-// eslint-disable-next-line react-refresh/only-export-components
 export { Button, buttonVariants }

@@ -58,6 +58,12 @@ Issues = "https://github.com/your-username/travel-planner/issues"
 [tool.hatch.build.targets.wheel]
 packages = ["src/travel_planner_agent"]
 
+[tool.uv]
+default-groups = ["dev"]
+
+[dependency-groups]
+dev = ["pytest", "pytest-asyncio", "pytest-mock", "pytest-cov", "black", "isort", "flake8", "mypy"]
+
 [tool.pytest.ini_options]
 testpaths = ["."]
 python_files = ["test_*.py"]

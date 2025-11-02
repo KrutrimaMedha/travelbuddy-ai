@@ -14,8 +14,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       <div className="relative">
         <select
           className={cn(
-            'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 appearance-none',
-            error && 'border-destructive focus-visible:ring-destructive',
+            'flex h-12 w-full rounded-full border border-border bg-white px-5 text-sm shadow-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emt-blue focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 appearance-none',
+            error && 'border-destructive focus-visible:ring-destructive focus-visible:ring-offset-0',
             className
           )}
           ref={ref}
@@ -36,7 +36,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             </option>
           ))}
         </select>
-        <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+        <ChevronDown className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
       </div>
     )
   }

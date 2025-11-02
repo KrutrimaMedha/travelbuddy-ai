@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+        sans: ['Poppins', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -39,6 +39,17 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        emt: {
+          blueDark: "#024195",
+          blue: "#0b74d6",
+          blueLight: "#59c3ff",
+          navy: "#142b63",
+          sky: "#e6f3ff",
+          skyLight: "#f4f9ff",
+          orange: "#ff8d1f",
+          orangeDark: "#da5200",
+          gold: "#bb9208",
         },
         travel: {
           adventure: "#ff6b6b",
