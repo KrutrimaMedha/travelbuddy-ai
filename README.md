@@ -8,15 +8,14 @@ This repository contains the **travel_planner_agent** package - a complete, self
 
 ```
 travelbuddy-ai/
-├── travel_planner_agent/    # 🎯 Complete Travel Planning Package
-│   ├── src/                 # Source code
-│   ├── tests/               # Test suite  
-│   ├── examples/            # Example scripts
-│   ├── README.md           # Complete documentation & setup guide
-│   └── pyproject.toml      # Package configuration
-├── .env.example            # Environment template
-├── LICENSE                 # MIT License
-└── README.md               # This file (overview)
+├── travel_planner_agent/     # 🤖 Core AI planning engine (Python package)
+├── travel_planner_ui/        # 🎨 React + Tailwind EaseMyTrip-themed interface
+│   ├── server/               # FastAPI gateway for the UI and mock EMT booking
+│   └── docs/api/openapi.json # Generated OpenAPI spec for the server
+├── docs/                     # Deployment & API documentation
+├── .env.example              # Environment template
+├── LICENSE                   # MIT License
+└── README.md                 # This file (overview)
 ```
 
 ## 🚀 Quick Start
@@ -34,15 +33,30 @@ The travel_planner_agent package contains:
 - ✅ Comprehensive test suite
 - ✅ All source code and dependencies
 
+## 🖥️ Travel Planner UI
+
+The `travel_planner_ui/` workspace provides the EaseMyTrip-inspired React experience, including the new mock “Book on EaseMyTrip” hand-off. See [travel_planner_ui/README.md](travel_planner_ui/README.md) for:
+
+- Local UI development (`npm run dev`) and type checks
+- Tailwind theming tokens aligned with EaseMyTrip branding
+- Integration details for the mock booking flow and confirmation modal
+
+## 🔌 FastAPI Gateway & Mock Services
+
+The UI’s Python gateway lives in `travel_planner_ui/server/` and now exposes:
+
+- `/api/mock-hotel-booking` – mocked EaseMyTrip-style confirmation payloads
+- `/api/plan-trip` and validation endpoints backed by `travel_planner_agent`
+
+Updated setup steps and environment variables are in [travel_planner_ui/server/README.md](travel_planner_ui/server/README.md). The generated OpenAPI/Swagger schema is available at `docs/api/openapi.json`.
+
 ## 📖 Complete Documentation
 
-**👉 See [travel_planner_agent/README.md](travel_planner_agent/README.md) for:**
-- 🛠️ Complete setup instructions with uv
-- 🧪 Testing guide and commands
-- 💡 Usage examples and API reference
-- 🔧 Development workflow
-- 🔑 API keys setup
-- 🚀 Quick start guide
+**👉 Detailed docs:**
+- [travel_planner_agent/README.md](travel_planner_agent/README.md) – AI engine setup, uv workflow & testing
+- [travel_planner_ui/README.md](travel_planner_ui/README.md) – React UI, theming and mock booking flow
+- [travel_planner_ui/server/README.md](travel_planner_ui/server/README.md) – FastAPI gateway, environment config & mock endpoints
+- [docs/api/openapi.json](docs/api/openapi.json) – Generated Swagger/OpenAPI schema for the server
 
 ## ☁️ Cloud Run Deployment
 

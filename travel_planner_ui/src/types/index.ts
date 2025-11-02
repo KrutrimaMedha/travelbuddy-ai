@@ -157,6 +157,49 @@ export interface BookingSummary {
   booking_instructions: string
 }
 
+export interface MockHotelBookingRequest {
+  hotel_name: string
+  destination: string
+  location: string
+  price: string
+  check_in?: string
+  check_out?: string
+  guests?: number
+  amenities?: string[]
+  theme?: string
+  travel_mode?: string
+  room_type?: string
+}
+
+export interface MockHotelBookingResponse {
+  status: string
+  provider: string
+  confirmation_id: string
+  booking_reference: string
+  payment_status: string
+  total_amount: string
+  check_in: string
+  check_out: string
+  guests: number
+  room_type: string
+  redirect_url: string
+  support_message: string
+  highlights: string[]
+  next_steps: string[]
+  branding: {
+    cta_label: string
+    badge: string
+  }
+  hotel_snapshot: {
+    name: string
+    location: string
+    destination: string
+    price: string
+    theme?: string
+    amenities: string[]
+  }
+}
+
 export interface TripResponse {
   trip_overview: TripOverview
   destinations: Destination[]

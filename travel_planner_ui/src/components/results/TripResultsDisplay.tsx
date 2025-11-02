@@ -11,8 +11,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import { travelPlannerApi } from '@/services/api'
 
-import type { TripResponse, ApiResponse, BudgetBreakdown } from '@/types'
+import type {
+  TripResponse,
+  ApiResponse,
+  BudgetBreakdown,
+  MockHotelBookingRequest,
+  MockHotelBookingResponse
+} from '@/types'
 import { TRAVEL_THEMES } from '@/utils/constants'
 
 // Backend API functions
@@ -58,6 +65,15 @@ export function TripResultsDisplay({
   const [mockMessage, setMockMessage] = useState<{ type: 'success' | 'info' | 'error'; message: string } | null>(null)
   const [transformedTrip, setTransformedTrip] = useState<any>(null)
   const [isTransforming, setIsTransforming] = useState(false)
+  const [bookingLoadingId, setBookingLoadingId] = useState<string | null>(null)
+  const [bookingConfirmation, setBookingConfirmation] = useState<MockHotelBookingResponse | null>(null)
+  const [bookingContext, setBookingContext] = useState<{
+    hotelName: string
+    location: string
+    price: string
+    checkIn: string
+    checkOut: string
+  } | null>(null)
 
   // Show mock message with auto-hide
   const showMockMessage = (type: 'success' | 'info' | 'error', message: string) => {
@@ -1064,6 +1080,68 @@ export function TripResultsDisplay({
   // Use the AI-enhanced trip data
   const safeTrip = trip
 
+  const closeBookingModal = () => {
+    setBookingConfirmation(null)
+    setBookingContext(null)
+  }
+
+  const handleHotelBooking = async (hotel: TripHotel) => {
+    if (!safeTrip || bookingLoadingId) {
+      return
+    }
+
+    setBookingLoadingId(hotel.name)
+    setBookingConfirmation(null)
+    setBookingContext(null)
+
+    const checkInDate = new Date()
+    // Give the user a few days before check-in to mimic real booking flows
+    checkInDate.setDate(checkInDate.getDate() + 5)
+
+    const durationMatches = safeTrip.trip_overview.duration.match(/\d+/g)
+    const stayLength = durationMatches && durationMatches.length > 0
+      ? parseInt(durationMatches[durationMatches.length - 1], 10)
+      : 3
+
+    const checkOutDate = new Date(checkInDate)
+    checkOutDate.setDate(checkOutDate.getDate() + Math.max(stayLength, 2))
+
+    const checkInIso = checkInDate.toISOString().split('T')[0]
+    const checkOutIso = checkOutDate.toISOString().split('T')[0]
+
+    const payload: MockHotelBookingRequest = {
+      hotel_name: hotel.name,
+      destination: safeTrip.trip_overview.destination,
+      location: hotel.location,
+      price: hotel.price_range,
+      check_in: checkInIso,
+      check_out: checkOutIso,
+      guests: 2,
+      amenities: hotel.amenities,
+      theme: safeTrip.trip_overview.theme,
+      travel_mode: safeTrip.trip_overview.travel_mode,
+      room_type: 'Deluxe Room with Breakfast'
+    }
+
+    try {
+      const confirmation = await travelPlannerApi.bookHotel(payload)
+      setBookingContext({
+        hotelName: hotel.name,
+        location: hotel.location,
+        price: hotel.price_range,
+        checkIn: checkInIso,
+        checkOut: checkOutIso
+      })
+      setBookingConfirmation(confirmation)
+      toast.success('EaseMyTrip booking handoff ready! Complete the reservation on the next page.')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to initiate booking. Please try again.'
+      toast.error(message)
+    } finally {
+      setBookingLoadingId(null)
+    }
+  }
+
   const tabs = [
     { id: 'overview' as const, label: 'Overview', icon: Info },
     { id: 'itinerary' as const, label: 'Daily Plan', icon: Calendar },
@@ -1135,6 +1213,14 @@ export function TripResultsDisplay({
             </button>
           </div>
         </motion.div>
+      )}
+
+      {bookingConfirmation && bookingContext && (
+        <BookingConfirmationModal
+          confirmation={bookingConfirmation}
+          context={bookingContext}
+          onClose={closeBookingModal}
+        />
       )}
 
       <motion.div
@@ -1242,7 +1328,11 @@ export function TripResultsDisplay({
         )}
 
         {activeTab === 'accommodations' && (
-          <AccommodationsTab trip={safeTrip} />
+          <AccommodationsTab
+            trip={safeTrip}
+            onBookHotel={handleHotelBooking}
+            bookingLoadingId={bookingLoadingId}
+          />
         )}
 
         {activeTab === 'budget' && (
@@ -1339,6 +1429,7 @@ interface TripData {
     amenities?: string[];
     theme_suitability: string;
     booking_options?: {
+      available?: boolean;
       booking_url?: string;
     };
   }>;
@@ -1353,6 +1444,8 @@ interface TripData {
   }>;
   budget_breakdown: BudgetBreakdown;
 }
+
+type TripHotel = NonNullable<TripData['hotels']>[number]
 
 function OverviewTab({ trip }: { trip: TripData }) {
   const handleTransportBooking = (option: any, isOneClick: boolean = false) => {
@@ -1748,16 +1841,15 @@ function ItineraryTab({ trip }: { trip: TripData }) {
 }
 
 // Accommodations Tab Component
-function AccommodationsTab({ trip }: { trip: TripData }) {
-  const handleHotelBooking = (hotel: any) => {
-    const bookingId = Math.random().toString(36).substring(2, 15).toUpperCase()
-    const checkIn = new Date()
-    const checkOut = new Date(checkIn)
-    checkOut.setDate(checkIn.getDate() + parseInt(trip.trip_overview.duration.match(/\d+/)?.[0] || '3'))
-
-    alert(`🏨 Hotel booking initiated! Redirecting to secure booking portal for "${hotel.name}". Check-in: ${checkIn.toLocaleDateString()}, Check-out: ${checkOut.toLocaleDateString()}. Rate: ${hotel.price_range}. Booking reference: ${bookingId}`)
-  }
-
+function AccommodationsTab({
+  trip,
+  onBookHotel,
+  bookingLoadingId
+}: {
+  trip: TripData
+  onBookHotel?: (hotel: TripHotel) => void
+  bookingLoadingId?: string | null
+}) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Hotels */}
@@ -1795,15 +1887,25 @@ function AccommodationsTab({ trip }: { trip: TripData }) {
                 ))}
               </div>
 
-              {hotel.booking_options?.booking_url && (
+              {(hotel.booking_options?.available ?? true) && (
                 <Button
-                  variant="outline"
+                  variant="accent"
                   size="sm"
-                  className="w-full"
-                  onClick={() => handleHotelBooking(hotel)}
+                  className="w-full text-white font-semibold shadow-lg shadow-emt-orange/30"
+                  onClick={() => onBookHotel?.(hotel)}
+                  disabled={!onBookHotel || bookingLoadingId === hotel.name}
                 >
-                  <ExternalLink className="h-4 w-4 mr-1" />
-                  Book Hotel
+                  {bookingLoadingId === hotel.name ? (
+                    <span className="flex items-center justify-center gap-2 text-sm">
+                      <span className="h-3 w-3 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+                      Connecting to EaseMyTrip…
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center">
+                      <ExternalLink className="h-4 w-4 mr-1" />
+                      Book on EaseMyTrip
+                    </span>
+                  )}
                 </Button>
               )}
             </div>
@@ -1854,6 +1956,140 @@ function AccommodationsTab({ trip }: { trip: TripData }) {
           ))}
         </CardContent>
       </Card>
+    </div>
+  )
+}
+
+function BookingConfirmationModal({
+  confirmation,
+  context,
+  onClose
+}: {
+  confirmation: MockHotelBookingResponse
+  context: {
+    hotelName: string
+    location: string
+    price: string
+    checkIn: string
+    checkOut: string
+  }
+  onClose: () => void
+}) {
+  const proceedToEaseMyTrip = () => {
+    window.open(confirmation.redirect_url, '_blank', 'noopener,noreferrer')
+  }
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center">
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.25 }}
+        className="relative w-full max-w-lg mx-4 overflow-hidden rounded-3xl bg-white shadow-2xl"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="bg-gradient-to-r from-emt-blue-dark via-emt-blue to-emt-blue-light text-white px-8 py-6">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.35em] text-white/80">
+                {confirmation.provider}
+              </p>
+              <h3 className="mt-2 text-2xl font-semibold">Almost there!</h3>
+              <p className="mt-2 text-sm text-white/85">
+                Secure <span className="font-semibold">{context.hotelName}</span> via EaseMyTrip to finish your stay booking.
+              </p>
+            </div>
+            <Badge variant="secondary" className="bg-white text-emt-blue-dark border-white/40">
+              {confirmation.branding?.badge || 'EaseMyTrip Partner'}
+            </Badge>
+          </div>
+          <button
+            type="button"
+            className="absolute right-4 top-4 text-white/80 hover:text-white"
+            onClick={onClose}
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="px-8 py-6 space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div className="p-3 rounded-xl bg-emt-sky/60">
+              <p className="text-xs text-emt-blue-dark/80 uppercase tracking-wide">Check-in</p>
+              <p className="text-base font-semibold text-emt-navy">{context.checkIn}</p>
+            </div>
+            <div className="p-3 rounded-xl bg-emt-sky/60">
+              <p className="text-xs text-emt-blue-dark/80 uppercase tracking-wide">Check-out</p>
+              <p className="text-base font-semibold text-emt-navy">{context.checkOut}</p>
+            </div>
+            <div className="p-3 rounded-xl bg-emt-sky/40">
+              <p className="text-xs text-emt-blue-dark/80 uppercase tracking-wide">Guests</p>
+              <p className="text-base font-semibold text-emt-navy">{confirmation.guests}</p>
+            </div>
+            <div className="p-3 rounded-xl bg-emt-sky/40">
+              <p className="text-xs text-emt-blue-dark/80 uppercase tracking-wide">Room Type</p>
+              <p className="text-base font-semibold text-emt-navy">{confirmation.room_type}</p>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-emt-sky/70 bg-white shadow-sm p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-base font-semibold text-emt-navy">{context.hotelName}</h4>
+                <p className="text-xs text-emt-blue-dark/70">{context.location}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-semibold text-emt-blue-dark">{context.price}</p>
+                <p className="text-xs text-emt-blue-dark/60">EMT confirmation #{confirmation.confirmation_id}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-emt-navy">EaseMyTrip Highlights</h4>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-emt-blue-dark/80">
+              {confirmation.highlights?.map((item, idx) => (
+                <li key={idx} className="flex items-start gap-2">
+                  <span className="mt-1 inline-block h-2 w-2 rounded-full bg-emt-blue-dark" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-emt-navy">Next Steps</h4>
+            <ol className="space-y-2 text-xs text-emt-blue-dark/85">
+              {confirmation.next_steps?.map((step, idx) => (
+                <li key={idx} className="flex gap-2">
+                  <span className="font-semibold text-emt-blue-dark">{idx + 1}.</span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="text-xs text-emt-blue-dark/70">{confirmation.support_message}</p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <Button
+              variant="gradient"
+              className="flex-1"
+              onClick={proceedToEaseMyTrip}
+            >
+              <ExternalLink className="h-4 w-4 mr-2" />
+              {confirmation.branding?.cta_label || 'Continue to EaseMyTrip'}
+            </Button>
+            <Button variant="ghost" className="flex-1" onClick={onClose}>
+              Maybe Later
+            </Button>
+          </div>
+        </div>
+      </motion.div>
     </div>
   )
 }

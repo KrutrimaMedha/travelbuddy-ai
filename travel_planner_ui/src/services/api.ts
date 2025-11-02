@@ -1,6 +1,13 @@
 
 import axios, { AxiosResponse } from 'axios'
-import type { TripRequest, TripResponse, BudgetValidation, ApiResponse } from '@/types'
+import type {
+  TripRequest,
+  TripResponse,
+  BudgetValidation,
+  ApiResponse,
+  MockHotelBookingRequest,
+  MockHotelBookingResponse
+} from '@/types'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -204,6 +211,23 @@ export const travelPlannerApi = {
         axios.isAxiosError(error) && error.response?.data?.message
           ? error.response.data.message
           : 'Search failed. Please try again.'
+      )
+    }
+  },
+
+  /**
+   * Initiate a mock EaseMyTrip hotel booking
+   */
+  async bookHotel(request: MockHotelBookingRequest): Promise<MockHotelBookingResponse> {
+    try {
+      const response: AxiosResponse<MockHotelBookingResponse> = await api.post('/api/mock-hotel-booking', request)
+      return response.data
+    } catch (error) {
+      console.error('Hotel booking mock failed:', error)
+      throw new Error(
+        axios.isAxiosError(error) && error.response?.data?.detail
+          ? error.response.data.detail
+          : 'Unable to initiate EaseMyTrip booking. Please try again.'
       )
     }
   },

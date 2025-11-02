@@ -13,8 +13,8 @@ if os.name == 'nt':  # Windows
     sys.stderr.reconfigure(encoding='utf-8')
 import asyncio
 import json
-from datetime import datetime
-from typing import Dict, Any, Union, Optional
+from datetime import datetime, timedelta, date
+from typing import Dict, Any, Union, Optional, List
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
@@ -24,6 +24,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 import uvicorn
 import logging
+from uuid import uuid4
 from dotenv import load_dotenv
 
 # Skip travel_planner import for testing duration validation
@@ -125,8 +126,23 @@ class SaveTripRequest(BaseModel):
     name: str
     trip_data: Dict[str, Any]
 
+
+class MockHotelBookingRequest(BaseModel):
+    hotel_name: str
+    destination: str
+    location: str
+    price: str
+    check_in: Optional[str] = None
+    check_out: Optional[str] = None
+    guests: Optional[int] = Field(default=2, ge=1, le=8)
+    amenities: Optional[List[str]] = None
+    theme: Optional[str] = None
+    travel_mode: Optional[str] = None
+    room_type: Optional[str] = None
+
 # In-memory storage for saved trips (in production, use a proper database)
 saved_trips: Dict[str, Dict[str, Any]] = {}
+mock_bookings: List[Dict[str, Any]] = []
 
 
 @app.get("/")
@@ -435,6 +451,79 @@ async def create_fallback_agent():
     except Exception as e:
         logging.error(f"Failed to create fallback agent: {e}")
         return None
+
+
+@app.post("/api/mock-hotel-booking")
+async def mock_hotel_booking(request: MockHotelBookingRequest):
+    """Simulate an EaseMyTrip hotel booking confirmation"""
+    today = datetime.utcnow().date()
+
+    def parse_date(value: Optional[str], fallback: date) -> date:
+        if not value:
+            return fallback
+        try:
+            return datetime.fromisoformat(value).date()
+        except ValueError:
+            return fallback
+
+    check_in_date = parse_date(request.check_in, today + timedelta(days=7))
+    default_check_out = check_in_date + timedelta(days=3)
+    check_out_date = parse_date(request.check_out, default_check_out)
+
+    confirmation_id = f"EMT-HOT-{uuid4().hex[:8].upper()}"
+    booking_reference = f"EZ{uuid4().hex[:6].upper()}"
+
+    response_payload = {
+        "status": "success",
+        "provider": "EaseMyTrip",
+        "confirmation_id": confirmation_id,
+        "booking_reference": booking_reference,
+        "payment_status": "Pending Payment",
+        "total_amount": request.price,
+        "check_in": check_in_date.strftime("%Y-%m-%d"),
+        "check_out": check_out_date.strftime("%Y-%m-%d"),
+        "guests": request.guests or 2,
+        "room_type": request.room_type or "Deluxe Room",
+        "redirect_url": f"https://www.easemytrip.com/hotels/booking/summary?ref={booking_reference.lower()}",
+        "support_message": "Complete your booking on EaseMyTrip to confirm your stay.",
+        "highlights": [
+            "Free cancellation within 24 hours",
+            "Zero convenience fee for EaseMyTrip members",
+            "24x7 EaseMyTrip concierge assistance"
+        ],
+        "next_steps": [
+            "Review guest & room details on EaseMyTrip",
+            "Apply coupons or EMT wallet balance",
+            "Complete payment to receive instant confirmation"
+        ],
+        "branding": {
+            "cta_label": "Proceed to EaseMyTrip",
+            "badge": "EaseMyTrip Trusted Partner"
+        },
+        "hotel_snapshot": {
+            "name": request.hotel_name,
+            "location": request.location,
+            "destination": request.destination,
+            "price": request.price,
+            "theme": request.theme,
+            "amenities": request.amenities or []
+        }
+    }
+
+    mock_bookings.append({
+        **response_payload,
+        "requested_at": datetime.utcnow().isoformat()
+    })
+    if len(mock_bookings) > 25:
+        del mock_bookings[:-25]
+
+    logging.info(
+        "Mock EaseMyTrip booking %s created for hotel %s",
+        confirmation_id,
+        request.hotel_name
+    )
+
+    return response_payload
 
 @app.post("/api/validate-budget")
 async def validate_budget(request: BudgetValidationRequest):

@@ -125,7 +125,7 @@ export function DatePicker({
           )}
         />
         <Calendar
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none"
+          className="absolute right-5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none"
         />
       </div>
 

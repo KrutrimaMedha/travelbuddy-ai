@@ -91,26 +91,22 @@ export function HomePage() {
     {
       icon: Sparkles,
       title: 'AI-Powered Planning',
-      description: 'Advanced AI creates personalized itineraries based on your preferences',
-      color: 'text-purple-500'
+      description: 'Advanced AI creates personalized itineraries based on your preferences'
     },
     {
       icon: Zap,
       title: 'Real-time Updates',
-      description: 'Get current weather, pricing, and availability information',
-      color: 'text-yellow-500'
+      description: 'Get current weather, pricing, and availability information'
     },
     {
       icon: Shield,
       title: 'Budget Optimization',
-      description: 'Smart budget validation and cost-saving recommendations',
-      color: 'text-green-500'
+      description: 'Smart budget validation and cost-saving recommendations'
     },
     {
       icon: Headphones,
       title: '24/7 Support',
-      description: 'Round-the-clock assistance for all your travel needs',
-      color: 'text-blue-500'
+      description: 'Round-the-clock assistance for all your travel needs'
     }
   ]
 
@@ -125,68 +121,60 @@ export function HomePage() {
       )}
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-        <div className="container mx-auto px-4 py-20 pb-10">
+      <section className="relative overflow-hidden text-white emt-hero-gradient">
+        <div className="absolute inset-0">
+          <div className="absolute -top-32 -left-24 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+          <div className="absolute top-12 right-10 h-48 w-48 rounded-full bg-white/20 blur-2xl" />
+          <div className="absolute inset-0 hidden md:block pointer-events-none opacity-10 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.45)_1px,transparent_0)] bg-[size:36px_36px]" />
+        </div>
+        <div className="container mx-auto px-4 py-24 pb-16 relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
+            className="max-w-5xl mx-auto text-center"
           >
-            <Badge className="mb-6 text-sm px-4 py-2">
-              <Sparkles className="h-4 w-4 mr-2" />
-              Powered by Advanced AI
+            <Badge
+              variant="outline"
+              className="mb-6 inline-flex items-center gap-2 border-white/40 bg-white/10 text-white uppercase tracking-[0.3em] text-[11px] px-5 py-2"
+            >
+              <Sparkles className="h-4 w-4" />
+              PREMIUM TRAVEL DEALS
             </Badge>
 
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              Plan Your Perfect Trip with{' '}
-              <span className="gradient-text">AI Intelligence</span>
+            <h1 className="text-4xl md:text-6xl font-semibold leading-tight">
+              Fly Smarter with{' '}
+              <span className="text-white">EaseMyTrip-inspired Planning</span>
             </h1>
 
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Get personalized travel itineraries, smart budget planning, and real-time recommendations
-              tailored to your preferences. Your dream vacation is just a few clicks away.
+            <p className="text-lg md:text-xl text-white/85 mt-6 mb-12 max-w-3xl mx-auto">
+              Unlock AI-personalized itineraries, budget-friendly fares, and round-the-clock assistance.
+              Experience the signature EaseMyTrip look and feel with intelligent travel automation.
             </p>
 
-            {/* <div className="flex flex-wrap justify-center gap-4 mb-12">
-              {TRAVEL_THEMES.slice(0, 4).map((theme, index) => (
-                <motion.div
-                  key={theme.id}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2 + index * 0.1, duration: 0.5 }}
-                >
-                  <Badge
-                    className={`px-4 py-2 bg-gradient-to-r ${theme.gradient} text-white border-none`}
-                  >
-                    <span className="mr-2">{theme.icon}</span>
-                    {theme.label}
-                  </Badge>
-                </motion.div>
-              ))}
-            </div> */}
-
-            {/* Stats */}
-            {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: animateStats ? 1 : 0, y: animateStats ? 0 : 20 }}
-                  transition={{ delay: 0.1 + index * 0.1, duration: 0.6 }}
-                  className="text-center"
-                >
-                  <div className="flex items-center justify-center mb-2">
-                    <stat.icon className="h-6 w-6 text-primary mr-2" />
-                    <span className="text-2xl md:text-3xl font-bold text-foreground">
-                      {stat.value}
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
-                </motion.div>
-              ))}
-            </div> */}
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button
+                size="xl"
+                variant="gradient"
+                className="group shadow-xl shadow-emt-blue-dark/40 ring-1 ring-white/20"
+                onClick={() => {
+                  document.getElementById('trip-planner')?.scrollIntoView({
+                    behavior: 'smooth'
+                  })
+                }}
+              >
+                Start Your Flight Search
+                <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button
+                size="xl"
+                variant="accent"
+                className="bg-white text-emt-navy hover:bg-white/90"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              >
+                View Live Offers
+              </Button>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -243,7 +231,7 @@ export function HomePage() {
     
       {/* Features Section */}
       {!showResults && (
-        <section id="features" className="py-20 bg-secondary/30">
+        <section id="features" className="py-20 emt-section-soft">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -252,10 +240,10 @@ export function HomePage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-emt-navy mb-4">
                 Why Choose TravelBuddy AI?
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-emt-blue-dark/80 max-w-2xl mx-auto">
                 Experience the future of travel planning with our cutting-edge AI technology
                 and comprehensive travel services.
               </p>
@@ -271,11 +259,13 @@ export function HomePage() {
                   viewport={{ once: true }}
                   whileHover={{ y: -5 }}
                 >
-                  <Card className="h-full">
-                    <CardContent className="p-6 text-center">
-                      <feature.icon className={`h-12 w-12 mx-auto mb-4 ${feature.color}`} />
-                      <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                      <p className="text-sm text-muted-foreground">
+                  <Card className="h-full border-none bg-white/95">
+                    <CardContent className="p-8 text-center space-y-4">
+                      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emt-sky">
+                        <feature.icon className={`h-9 w-9 text-emt-blue`} />
+                      </div>
+                      <h3 className="text-lg font-semibold text-emt-navy">{feature.title}</h3>
+                      <p className="text-sm text-muted-foreground/90">
                         {feature.description}
                       </p>
                     </CardContent>
@@ -298,43 +288,53 @@ export function HomePage() {
               viewport={{ once: true }}
               className="text-center max-w-3xl mx-auto"
             >
-              <Card className="relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10" />
-                <CardContent className="relative p-12">
-                  <Globe className="h-16 w-16 mx-auto mb-6 text-primary" />
-                  <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              <Card className="relative overflow-hidden border-none bg-gradient-to-r from-emt-blue-dark via-emt-blue to-emt-blue-light text-white shadow-2xl">
+                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.6),transparent_55%)]" />
+                <CardContent className="relative p-12 space-y-6">
+                  <Globe className="h-16 w-16 mx-auto mb-4 text-white drop-shadow-lg" />
+                  <h2 className="text-2xl md:text-3xl font-semibold">
                     Ready for Your Next Adventure?
                   </h2>
-                  <p className="text-lg text-muted-foreground mb-8">
-                    Join thousands of travelers who trust TravelBuddy AI for their perfect trips.
-                    Start planning your dream vacation today!
+                  <p className="text-lg text-white/85 max-w-2xl mx-auto">
+                    Join thousands of travelers who trust TravelBuddy AI for EaseMyTrip-inspired planning.
+                    Start building your itinerary with transparent pricing and lightning-fast results.
                   </p>
 
-                  <Button
-                    size="xl"
-                    variant="gradient"
-                    onClick={() => {
-                      document.getElementById('trip-planner')?.scrollIntoView({
-                        behavior: 'smooth'
-                      })
-                    }}
-                    className="group"
-                  >
-                    Start Planning Now
-                    <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
+                  <div className="flex flex-wrap justify-center gap-4">
+                    <Button
+                      size="xl"
+                      variant="accent"
+                      className="group shadow-xl shadow-black/20"
+                      onClick={() => {
+                        document.getElementById('trip-planner')?.scrollIntoView({
+                          behavior: 'smooth'
+                        })
+                      }}
+                    >
+                      Start Planning Now
+                      <ArrowRight className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1" />
+                    </Button>
+                    <Button
+                      size="xl"
+                      variant="ghost"
+                      className="border-white/60 text-white hover:bg-white/10"
+                      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    >
+                      Explore Offers
+                    </Button>
+                  </div>
 
-                  <div className="mt-8 flex items-center justify-center gap-6 text-sm text-muted-foreground">
+                  <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-sm text-white/80">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <CheckCircle2 className="h-4 w-4 text-white" />
                       <span>Free to use</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <CheckCircle2 className="h-4 w-4 text-white" />
                       <span>Instant results</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <CheckCircle2 className="h-4 w-4 text-white" />
                       <span>AI-powered</span>
                     </div>
                   </div>

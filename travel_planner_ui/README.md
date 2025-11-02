@@ -2,15 +2,16 @@
 
 ## Project Overview
 
-TravelBuddy AI is an intelligent travel planning platform that leverages Google's Generative AI to create personalized travel itineraries. This application combines advanced AI capabilities with real-time data to provide comprehensive travel planning solutions.
+TravelBuddy AI is an intelligent travel planning platform that leverages Google's Generative AI to create personalized travel itineraries. This application combines advanced AI capabilities with real-time data to provide comprehensive travel planning solutions with an EaseMyTrip-inspired visual experience.
 
 ## Technical Architecture
 
 ### Frontend (React + TypeScript)
 - **Framework**: React 18 with TypeScript for type safety
-- **UI Components**: Custom component library with Tailwind CSS
+- **EaseMyTrip Theme**: Tailwind CSS design system with Poppins typography, blue/orange gradient tokens, and EMT utility classes
 - **State Management**: React Query for server state, React Hook Form for form management
 - **Real-time Validation**: Smart budget and duration validation with debounced API calls
+- **Mock Booking Flow**: CTA triggers `/api/mock-hotel-booking` and renders an EMT-branded confirmation modal
 - **Performance**: Optimized with lazy loading, memoization, and efficient re-renders
 
 ### Backend (FastAPI + Python)
@@ -63,10 +64,16 @@ npm run dev
 
 ### Backend Setup
 ```bash
-cd travel_planner_ui/server
-pip install fastapi uvicorn python-dotenv
-# Create .env file with GEMINI_API_KEY
-python main.py
+cd travel_planner_ui
+
+# Install FastAPI gateway dependencies (uses uv for repeatable installs)
+uv pip install --no-cache-dir -r server/requirements.txt
+
+# Export your Google Generative AI key before starting the gateway
+export GEMINI_API_KEY=your_google_gen_ai_key
+
+# Launch the server with auto-reload
+uvicorn travel_planner_ui.server.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### Environment Variables
@@ -85,8 +92,11 @@ VITE_API_URL=http://localhost:8000
 - `POST /api/plan-trip` - Generate comprehensive trip plans
 - `POST /api/validate-duration` - Validate trip duration based on distance
 - `POST /api/validate-budget` - Validate budget requirements
+- `POST /api/mock-hotel-booking` - Generate EaseMyTrip-style booking confirmations for UI hand-off
 - `GET /api/docs` - Interactive API documentation
 - `GET /api/redoc` - Alternative API documentation
+
+> The full OpenAPI schema is generated at `docs/api/openapi.json` for Swagger tooling.
 
 ### Response Format
 ```json
