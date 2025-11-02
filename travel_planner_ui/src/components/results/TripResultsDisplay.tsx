@@ -2000,9 +2000,9 @@ function BookingConfirmationModal({
               <p className="text-[11px] uppercase tracking-[0.35em] text-white/80">
                 {confirmation.provider}
               </p>
-              <h3 className="mt-2 text-2xl font-semibold">Almost there!</h3>
+              <h3 className="mt-2 text-2xl font-semibold text-white">Almost there!</h3>
               <p className="mt-2 text-sm text-white/85">
-                Secure <span className="font-semibold">{context.hotelName}</span> via EaseMyTrip to finish your stay booking.
+                Secure <span className="font-semibold text-white">{context.hotelName}</span> via EaseMyTrip to finish your stay booking.
               </p>
             </div>
             <Badge variant="secondary" className="bg-white text-emt-blue-dark border-white/40">
@@ -2011,14 +2011,14 @@ function BookingConfirmationModal({
           </div>
           <button
             type="button"
-            className="absolute right-4 top-4 text-white/80 hover:text-white"
+            className="absolute right-4 top-4 text-white/80 hover:text-white transition-colors"
             onClick={onClose}
           >
-            ×
+            <span className="text-2xl leading-none">×</span>
           </button>
         </div>
 
-        <div className="px-8 py-6 space-y-5">
+        <div className="px-8 py-6 space-y-5 bg-white">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <div className="p-3 rounded-xl bg-emt-sky/60">
               <p className="text-xs text-emt-blue-dark/80 uppercase tracking-wide">Check-in</p>
@@ -2053,11 +2053,11 @@ function BookingConfirmationModal({
 
           <div className="space-y-3">
             <h4 className="text-sm font-semibold text-emt-navy">EaseMyTrip Highlights</h4>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-emt-blue-dark/80">
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
               {confirmation.highlights?.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2">
-                  <span className="mt-1 inline-block h-2 w-2 rounded-full bg-emt-blue-dark" />
-                  <span>{item}</span>
+                <li key={idx} className="flex items-start gap-2 text-emt-blue-dark/80">
+                  <span className="mt-1 inline-block h-2 w-2 rounded-full bg-emt-blue-dark flex-shrink-0" />
+                  <span className="text-emt-blue-dark/80">{item}</span>
                 </li>
               ))}
             </ul>
@@ -2065,11 +2065,11 @@ function BookingConfirmationModal({
 
           <div className="space-y-3">
             <h4 className="text-sm font-semibold text-emt-navy">Next Steps</h4>
-            <ol className="space-y-2 text-xs text-emt-blue-dark/85">
+            <ol className="space-y-2 text-xs">
               {confirmation.next_steps?.map((step, idx) => (
-                <li key={idx} className="flex gap-2">
-                  <span className="font-semibold text-emt-blue-dark">{idx + 1}.</span>
-                  <span>{step}</span>
+                <li key={idx} className="flex gap-2 text-emt-blue-dark/85">
+                  <span className="font-semibold text-emt-blue-dark flex-shrink-0">{idx + 1}.</span>
+                  <span className="text-emt-blue-dark/85">{step}</span>
                 </li>
               ))}
             </ol>
@@ -2077,16 +2077,22 @@ function BookingConfirmationModal({
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
-            <Button
-              variant="gradient"
-              className="flex-1"
+            <button
+              type="button"
               onClick={proceedToEaseMyTrip}
+              className="flex-1 inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold transition-all bg-gradient-to-r from-emt-blue-dark via-emt-blue to-emt-blue-light text-white shadow-lg hover:shadow-xl px-6 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emt-blue-light focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
             >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              {confirmation.branding?.cta_label || 'Continue to EaseMyTrip'}
-            </Button>
-            <Button variant="ghost" className="flex-1" onClick={onClose}>
-              Maybe Later
+              <ExternalLink className="h-4 w-4 mr-2 text-white" />
+              <span className="text-white">
+                {confirmation.branding?.cta_label || 'Continue to EaseMyTrip'}
+              </span>
+            </button>
+            <Button 
+              variant="ghost" 
+              className="flex-1 text-emt-blue hover:bg-emt-sky border border-emt-blue/20" 
+              onClick={onClose}
+            >
+              <span className="text-emt-blue">Maybe Later</span>
             </Button>
           </div>
         </div>

@@ -69,7 +69,7 @@ export function TripPlanningForm({ onSubmit, isLoading }: TripPlanningFormProps)
     { id: 'hotels', label: 'Hotels', icon: Hotel },
     { id: 'trains', label: 'Trains', icon: Train }
   ]
-  const activeBookingTab = 'flights'
+  const activeBookingTab = 'flight'
 
   const {
     validateBudget,
