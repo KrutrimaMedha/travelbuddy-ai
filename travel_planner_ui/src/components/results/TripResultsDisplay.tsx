@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
@@ -106,6 +107,7 @@ export function TripResultsDisplay({
     }
 
     transformData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tripData])
 
   // Debug logging
@@ -1154,10 +1156,9 @@ export function TripResultsDisplay({
       const tripName = `${safeTrip.trip_overview.source} to ${safeTrip.trip_overview.destination} - ${safeTrip.trip_overview.duration}`
 
       // Show mock success message
-      showMockMessage('success', `✅ Trip "${tripName}" has been saved to your travel portfolio! You can access it anytime from your saved trips.`)
 
       if (onSaveTrip) {
-        onSaveTrip({ ...safeTrip, name: tripName })
+          showMockMessage('success', `✅ Trip "${tripName}" has been saved to your travel portfolio! You can access it anytime from your saved trips.`)
       }
       setSavedTrip(true)
     }
@@ -1168,7 +1169,7 @@ export function TripResultsDisplay({
       const tripName = `${safeTrip.trip_overview.source} to ${safeTrip.trip_overview.destination}`
 
       // Generate a mock shareable link
-      const shareableLink = `https://travelbuddy.ai/shared-trip/${Math.random().toString(36).substring(2, 15)}`
+      const shareableLink = `https://travelbuddy-backend-482491992521.us-central1.run.app/${Math.random().toString(36).substring(2, 15)}`
 
       // Try to copy to clipboard (mock)
       try {

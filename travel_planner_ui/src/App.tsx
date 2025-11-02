@@ -40,8 +40,6 @@ function App() {
   }
 
   const navigation = [
-    { name: 'Home', href: '#' },
-    { name: 'Plan Trip', href: '#trip-planner' },
     { name: 'Features', href: '#features' },
     { name: 'About', href: '#about' }
   ]

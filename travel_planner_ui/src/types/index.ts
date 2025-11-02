@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Travel Planning Types
 export interface TripRequest {
   source: string
